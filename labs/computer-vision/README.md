@@ -27,7 +27,6 @@ notebooks/
 ├── problem_statement.ipynb
 ├── theory.ipynb
 ├── requirements.ipynb
-├── algorithm.ipynb
 └── main.ipynb
 ```
 
