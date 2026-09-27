@@ -90,13 +90,6 @@ Not included:
 - multi-object tracking;
 - ground-truth localization-error evaluation.
 
-## Participants
-
-- **Denos Kume**
-- **Oluwole SHOKUNBI**
-
-**MSc. CORO DASSIP — École Centrale de Nantes**
-
 ---
 
 <p align="center">
