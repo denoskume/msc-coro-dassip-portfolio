@@ -99,12 +99,6 @@ Implemented:
 - RGB filtering and numerical-safety checks;
 - numerical and visual validation.
 
-Not included:
-
-- frequency-domain filtering;
-- segmentation;
-- learned convolutional filters;
-- task-specific computer-vision pipelines.
 
 ---
 
