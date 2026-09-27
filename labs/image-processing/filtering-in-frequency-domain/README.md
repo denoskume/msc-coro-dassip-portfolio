@@ -46,9 +46,6 @@ Main outputs:
 - `17_moire_removal.png`
 - `18_shading_correction.png`
 - `19_cutoff_sensitivity.png`
-- `20_failure_diagnostics.png`
-- `21_parameter_sensitivity.png`
-- `22_method_selection.png`
 - `23_integrated_workflow.png`
 
 ## Run
