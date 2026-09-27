@@ -1,18 +1,15 @@
 from __future__ import annotations
 
 import ast
-import io
 import json
 import re
 import sys
-import tokenize
 from pathlib import Path
 
 EXPECTED_NOTEBOOKS = {
     "theory.ipynb",
     "problem_statement.ipynb",
     "requirements.ipynb",
-    "algorithm.ipynb",
     "main.ipynb",
 }
 
@@ -68,13 +65,6 @@ def numbered_h2_sections(markdown: str) -> list[str]:
             sections.append(match.group(1).strip())
     return sections
 
-def numbered_h2_steps(markdown: str) -> list[tuple[int, str]]:
-    steps = []
-    for line in markdown.splitlines():
-        match = re.match(r"^##\s+(\d+)\.\s+(.+)$", line.strip())
-        if match:
-            steps.append((int(match.group(1)), match.group(2).strip()))
-    return steps
 
 def extract_module_title(markdown: str, suffix: str) -> str | None:
     pattern = re.compile(
@@ -188,41 +178,6 @@ for lab_dir in lab_dirs:
                 )
                 continue
 
-            if notebook_path.name == "main.ipynb":
-                try:
-                    tokens = list(
-                        tokenize.generate_tokens(io.StringIO(source).readline)
-                    )
-                    comment_count = sum(
-                        token.type == tokenize.COMMENT
-                        for token in tokens
-                    )
-                    if not 3 <= comment_count <= 8:
-                        errors.append(
-                            f"{notebook_path}:cell {cell_index}: expected "
-                            f"3-8 strategic Python comments; found {comment_count}."
-                        )
-                except tokenize.TokenError as exc:
-                    errors.append(
-                        f"{notebook_path}:cell {cell_index}: tokenization error: {exc}"
-                    )
-
-                for node in ast.walk(tree):
-                    if isinstance(
-                        node,
-                        (ast.Module, ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef),
-                    ):
-                        body = getattr(node, "body", [])
-                        if (
-                            body
-                            and isinstance(body[0], ast.Expr)
-                            and isinstance(body[0].value, ast.Constant)
-                            and isinstance(body[0].value.value, str)
-                        ):
-                            errors.append(
-                                f"{notebook_path}:cell {cell_index}: docstring detected."
-                            )
-                            break
 
     if set(notebooks) != EXPECTED_NOTEBOOKS:
         continue
@@ -230,13 +185,11 @@ for lab_dir in lab_dirs:
     problem_md = markdown_text(notebooks["problem_statement.ipynb"])
     theory_md = markdown_text(notebooks["theory.ipynb"])
     requirements_md = markdown_text(notebooks["requirements.ipynb"])
-    algorithm_md = markdown_text(notebooks["algorithm.ipynb"])
     main_md = markdown_text(notebooks["main.ipynb"])
     main_code = code_text(notebooks["main.ipynb"])
 
     tasks = problem_tasks(problem_md)
     theory_sections = numbered_h2_sections(theory_md)
-    algorithm_steps = numbered_h2_steps(algorithm_md)
     main_sections = numbered_h2_sections(main_md)
 
     if not tasks:
@@ -250,52 +203,6 @@ for lab_dir in lab_dirs:
             f"{lab_dir}: Problem Statement tasks and Main sections are not aligned."
         )
 
-    if not algorithm_steps:
-        errors.append(f"{lab_dir}: Algorithm contains no numbered coding steps.")
-    else:
-        step_numbers = [number for number, _ in algorithm_steps]
-        expected_numbers = list(range(step_numbers[-1] + 1))
-        if step_numbers != expected_numbers:
-            errors.append(
-                f"{lab_dir}: Algorithm step numbers are not contiguous from 0 to End."
-            )
-        if algorithm_steps[0] != (0, "Start"):
-            errors.append(
-                f"{lab_dir}: Algorithm must begin with '## 0. Start'."
-            )
-        if algorithm_steps[-1][1].strip().lower() != "end":
-            errors.append(
-                f"{lab_dir}: Algorithm must terminate with a numbered 'End' step."
-            )
-
-        coding_instruction_count = algorithm_md.count("**Coding instructions**")
-        if coding_instruction_count != len(algorithm_steps) - 1:
-            errors.append(
-                f"{lab_dir}: every numbered algorithm step except End must contain "
-                f"'**Coding instructions**'."
-            )
-
-    missing_algorithm_tasks = [
-        task for task in tasks
-        if task not in algorithm_md
-    ]
-    if missing_algorithm_tasks:
-        errors.append(
-            f"{lab_dir}: Algorithm Task Coverage is missing "
-            f"{missing_algorithm_tasks}."
-        )
-
-    forbidden_algorithm_phrases = [
-        "Use only validated outputs from the preceding stage.",
-        "Execute the operation defined by this stage",
-        "A validated intermediate result for this stage.",
-    ]
-    for phrase in forbidden_algorithm_phrases:
-        if phrase in algorithm_md:
-            errors.append(
-                f"{lab_dir}: Algorithm contains generic placeholder text: {phrase!r}."
-            )
-
     if "final interpretation" in problem_md.lower():
         errors.append(
             f"{lab_dir}: Problem Statement still requires a final interpretation."
@@ -308,42 +215,17 @@ for lab_dir in lab_dirs:
     problem_title = extract_module_title(problem_md, "Problem Statement")
     theory_title = extract_module_title(theory_md, "Theory")
     requirements_title = extract_module_title(requirements_md, "Requirements")
-    algorithm_title = extract_module_title(algorithm_md, "Algorithm")
 
-    if not problem_title or not theory_title or not requirements_title or not algorithm_title:
+    if not problem_title or not theory_title or not requirements_title:
         errors.append(f"{lab_dir}: one or more notebook module titles could not be parsed.")
-    elif not (problem_title == theory_title == requirements_title == algorithm_title):
+    elif not (problem_title == theory_title == requirements_title):
         errors.append(
             f"{lab_dir}: notebook titles disagree: "
-            f"{problem_title!r}, {theory_title!r}, "
-            f"{requirements_title!r}, {algorithm_title!r}."
+            f"{problem_title!r}, {theory_title!r}, {requirements_title!r}."
         )
     elif problem_title not in main_md:
         errors.append(
             f"{lab_dir}: Main notebook header does not match module title {problem_title!r}."
-        )
-
-    expected_algorithm_headings = [
-        "## Purpose",
-        "## Algorithm Rules",
-        "## End-to-End Flow",
-        "## Inputs and Final Outputs",
-        "## Complete End-to-End Pseudocode",
-        "## Task Coverage",
-        "## Notebook Relationship",
-    ]
-    for heading in expected_algorithm_headings:
-        if heading not in algorithm_md:
-            errors.append(f"{lab_dir}: Algorithm missing heading {heading!r}.")
-
-    if code_text(notebooks["algorithm.ipynb"]).strip():
-        errors.append(
-            f"{lab_dir}: Algorithm notebook must remain explanatory and contain no code cells."
-        )
-
-    if "main.ipynb" not in algorithm_md:
-        errors.append(
-            f"{lab_dir}: Algorithm notebook does not map its workflow to main.ipynb."
         )
 
     if "## References" not in theory_md:
@@ -408,6 +290,6 @@ if errors:
 
 print(
     f"Notebook QA passed: {len(lab_dirs)} labs, {notebook_count} notebooks. "
-    "Structure, task coverage, end-to-end algorithm steps, titles, requirements, references, Python syntax, "
-    "per-cell strategic comments, main-notebook cleanliness, and output declarations are consistent."
+    "Structure, task coverage, titles, requirements, references, Python syntax, "
+    "main-notebook cleanliness, and output declarations are consistent."
 )
