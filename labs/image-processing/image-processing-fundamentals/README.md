@@ -95,13 +95,6 @@ Implemented:
 - PNG/JPEG comparison;
 - numerical and visual validation.
 
-Not included:
-
-- geometric image transformations;
-- spatial convolution and filtering;
-- frequency-domain filtering;
-- image segmentation;
-- projective geometry and camera calibration.
 
 ---
 
