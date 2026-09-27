@@ -98,12 +98,6 @@ Implemented:
 - end-to-end binary segmentation;
 - numerical and visual validation.
 
-Not included:
-
-- deep semantic segmentation;
-- learned feature extractors;
-- instance-segmentation networks;
-- production annotation pipelines.
 
 ---
 
