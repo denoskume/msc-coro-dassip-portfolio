@@ -8,12 +8,11 @@
 
 Neighborhood-based image-filtering laboratory covering convolution, border handling, smoothing, denoising, sharpening, derivative operators, RGB filtering, quantitative comparison, and validation.
 
-The lab is organized into five complementary notebooks:
+The lab is organized into four complementary notebooks:
 
 - [Problem Statement](notebooks/problem_statement.ipynb) — problem definition, inputs, expected outputs, and the 23 required tasks.
 - [Requirements](notebooks/requirements.ipynb) — Python environment, required packages, input-data checks, and execution prerequisites.
 - [Theory](notebooks/theory.ipynb) — mathematical formulation of spatial filtering, convolution, filter families, derivative operators, and limitations.
-- [Algorithm](notebooks/algorithm.ipynb) — complete end-to-end procedure aligned stage-by-stage with the Problem Statement and implementation, including outputs, decision points, handoffs, and validation conditions.
 - [Implementation](notebooks/main.ipynb) — executable workflow with code, generated outputs, metrics, diagnostics, and validation.
 
 ## Outputs
@@ -58,7 +57,7 @@ python -m pip install -r requirements.txt
 code .
 ```
 
-Review [algorithm.ipynb](notebooks/algorithm.ipynb) for the complete ordered procedure, then open [main.ipynb](notebooks/main.ipynb), select the project `.venv` kernel, and run all cells from top to bottom.
+Open [main.ipynb](notebooks/main.ipynb), select the project `.venv` kernel, and run all cells from top to bottom.
 
 A successful execution ends with:
 
@@ -75,7 +74,6 @@ filtering-in-spatial-domain/
 │   ├── problem_statement.ipynb
 │   ├── theory.ipynb
 │   ├── requirements.ipynb
-│   ├── algorithm.ipynb
 │   └── main.ipynb
 ├── outputs/
 │   └── figures/
