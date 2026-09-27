@@ -105,12 +105,6 @@ Not included:
 - instance-segmentation networks;
 - production annotation pipelines.
 
-## Participants
-
-- **Denos Kume**
-
-**MSc. CORO DASSIP — École Centrale de Nantes**
-
 ---
 
 <p align="center">
