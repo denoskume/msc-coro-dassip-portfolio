@@ -88,13 +88,6 @@ Not included:
 - robust outlier rejection;
 - uncertainty propagation.
 
-## Participants
-
-- **Denos Kume**
-- **Oluwole SHOKUNBI**
-
-**MSc. CORO DASSIP — École Centrale de Nantes**
-
 ---
 
 <p align="center">
