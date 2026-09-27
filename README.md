@@ -100,48 +100,6 @@ msc-coro-dassip-portfolio/
 
 ---
 
-## Tools and Libraries
-
-<table align="center">
-  <tr>
-    <td align="center" width="100">
-      <img src="assets/tools/python.svg" height="44" alt="Python" /><br>
-      <sub><b>Python</b></sub>
-    </td>
-    <td align="center" width="100">
-      <img src="assets/tools/scipy.svg" height="44" alt="SciPy" /><br>
-      <sub><b>SciPy</b></sub>
-    </td>
-    <td align="center" width="100">
-      <img src="assets/tools/matplotlib.svg" height="44" alt="Matplotlib" /><br>
-      <sub><b>Matplotlib</b></sub>
-    </td>
-    <td align="center" width="100">
-      <img src="assets/tools/opencv.svg" height="44" alt="OpenCV" /><br>
-      <sub><b>OpenCV</b></sub>
-    </td>
-  </tr>
-  <tr>
-    <td align="center" width="100">
-      <img src="assets/tools/pytorch.svg" height="44" alt="PyTorch" /><br>
-      <sub><b>PyTorch</b></sub>
-    </td>
-    <td align="center" width="100">
-      <img src="assets/tools/vscode.svg" height="44" alt="VS Code" /><br>
-      <sub><b>VS Code</b></sub>
-    </td>
-    <td align="center" width="100">
-      <img src="assets/tools/linux.svg" height="44" alt="Linux" /><br>
-      <sub><b>Linux</b></sub>
-    </td>
-    <td align="center" width="100">
-      <img src="assets/tools/git.svg" height="44" alt="Git" /><br>
-      <sub><b>Git</b></sub>
-    </td>
-  </tr>
-</table>
-
----
 
 <p align="center">
   <a href="https://github.com/denoskume">
