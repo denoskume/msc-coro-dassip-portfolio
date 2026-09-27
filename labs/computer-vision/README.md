@@ -53,19 +53,34 @@ computer-vision/
 │   ├── README.md
 │   ├── data/
 │   ├── notebooks/
+│   │   ├── problem_statement.ipynb
+│   │   ├── theory.ipynb
+│   │   ├── requirements.ipynb
+│   │   └── main.ipynb
 │   ├── outputs/
+│   │   └── figures/
 │   └── requirements.txt
 ├── deep-learning/
 │   ├── README.md
 │   ├── data/
 │   ├── notebooks/
+│   │   ├── problem_statement.ipynb
+│   │   ├── theory.ipynb
+│   │   ├── requirements.ipynb
+│   │   └── main.ipynb
 │   ├── outputs/
+│   │   └── figures/
 │   └── requirements.txt
 └── feature-tracking/
     ├── README.md
     ├── data/
     ├── notebooks/
+    │   ├── problem_statement.ipynb
+    │   ├── theory.ipynb
+    │   ├── requirements.ipynb
+    │   └── main.ipynb
     ├── outputs/
+    │   └── figures/
     └── requirements.txt
 ```
 
