@@ -149,6 +149,8 @@ for lab_dir in lab_dirs:
         if "MSc. CORO DASSIP" not in markdown:
             errors.append(f"{notebook_path}: MSc. CORO DASSIP header missing.")
 
+        main_comment_count = 0
+
         for cell_index, cell in enumerate(notebook.get("cells", []), start=1):
             source = cell_source(cell)
 
@@ -181,10 +183,10 @@ for lab_dir in lab_dirs:
             if notebook_path.name == "main.ipynb":
                 try:
                     tokens = tokenize.generate_tokens(io.StringIO(source).readline)
-                    if any(token.type == tokenize.COMMENT for token in tokens):
-                        errors.append(
-                            f"{notebook_path}:cell {cell_index}: Python comment detected."
-                        )
+                    main_comment_count += sum(
+                        token.type == tokenize.COMMENT
+                        for token in tokens
+                    )
                 except tokenize.TokenError as exc:
                     errors.append(
                         f"{notebook_path}:cell {cell_index}: tokenization error: {exc}"
@@ -206,6 +208,13 @@ for lab_dir in lab_dirs:
                                 f"{notebook_path}:cell {cell_index}: docstring detected."
                             )
                             break
+
+        if notebook_path.name == "main.ipynb":
+            if not 3 <= main_comment_count <= 15:
+                errors.append(
+                    f"{notebook_path}: expected 3-15 strategic Python comments; "
+                    f"found {main_comment_count}."
+                )
 
     if set(notebooks) != EXPECTED_NOTEBOOKS:
         continue
@@ -319,5 +328,5 @@ if errors:
 print(
     f"Notebook QA passed: {len(lab_dirs)} labs, {notebook_count} notebooks. "
     "Structure, task alignment, titles, requirements, references, Python syntax, "
-    "main-notebook cleanliness, and output declarations are consistent."
+    "main-notebook strategic comments, cleanliness, and output declarations are consistent."
 )
