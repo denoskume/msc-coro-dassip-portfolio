@@ -24,25 +24,28 @@ Each module contains:
 
 ```text
 notebooks/
-├── theory.ipynb
 ├── problem_statement.ipynb
+├── theory.ipynb
 ├── requirements.ipynb
+├── algorithm.ipynb
 └── main.ipynb
 ```
 
 - **Theory** — mathematical foundations, assumptions, limitations, and references.
 - **Problem Statement** — context, tasks, inputs, objectives, and deliverables.
 - **Requirements** — environment, dependencies, required data, and installation.
-- **Implementation** — code, outputs, metrics, diagnostics, validation, and final interpretation.
+- **Algorithm** — complete end-to-end procedure, decision points, stage outputs, acceptance checks, and handoffs.
+- **Implementation** — executable code, outputs, metrics, diagnostics, and validation.
 
 ## Module Standard
 
 - repository-relative paths;
 - module-specific `requirements.txt`;
+- explicit algorithm-to-implementation traceability;
 - top-to-bottom implementation workflow;
 - generated figures under `outputs/figures/`;
 - numerical and visual diagnostics;
-- explicit validation and final technical interpretation.
+- explicit numerical and output validation.
 
 ## Directory Structure
 

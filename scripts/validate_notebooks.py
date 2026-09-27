@@ -12,6 +12,7 @@ EXPECTED_NOTEBOOKS = {
     "theory.ipynb",
     "problem_statement.ipynb",
     "requirements.ipynb",
+    "algorithm.ipynb",
     "main.ipynb",
 }
 
@@ -221,11 +222,13 @@ for lab_dir in lab_dirs:
     problem_md = markdown_text(notebooks["problem_statement.ipynb"])
     theory_md = markdown_text(notebooks["theory.ipynb"])
     requirements_md = markdown_text(notebooks["requirements.ipynb"])
+    algorithm_md = markdown_text(notebooks["algorithm.ipynb"])
     main_md = markdown_text(notebooks["main.ipynb"])
     main_code = code_text(notebooks["main.ipynb"])
 
     tasks = problem_tasks(problem_md)
     theory_sections = numbered_h2_sections(theory_md)
+    algorithm_sections = numbered_h2_sections(algorithm_md)
     main_sections = numbered_h2_sections(main_md)
 
     if not tasks:
@@ -233,6 +236,10 @@ for lab_dir in lab_dirs:
     if tasks != theory_sections:
         errors.append(
             f"{lab_dir}: Problem Statement tasks and Theory sections are not aligned."
+        )
+    if tasks != algorithm_sections:
+        errors.append(
+            f"{lab_dir}: Problem Statement tasks and Algorithm sections are not aligned."
         )
     if tasks != main_sections:
         errors.append(
@@ -251,17 +258,40 @@ for lab_dir in lab_dirs:
     problem_title = extract_module_title(problem_md, "Problem Statement")
     theory_title = extract_module_title(theory_md, "Theory")
     requirements_title = extract_module_title(requirements_md, "Requirements")
+    algorithm_title = extract_module_title(algorithm_md, "Algorithm")
 
-    if not problem_title or not theory_title or not requirements_title:
+    if not problem_title or not theory_title or not requirements_title or not algorithm_title:
         errors.append(f"{lab_dir}: one or more notebook module titles could not be parsed.")
-    elif not (problem_title == theory_title == requirements_title):
+    elif not (problem_title == theory_title == requirements_title == algorithm_title):
         errors.append(
             f"{lab_dir}: notebook titles disagree: "
-            f"{problem_title!r}, {theory_title!r}, {requirements_title!r}."
+            f"{problem_title!r}, {theory_title!r}, "
+            f"{requirements_title!r}, {algorithm_title!r}."
         )
     elif problem_title not in main_md:
         errors.append(
             f"{lab_dir}: Main notebook header does not match module title {problem_title!r}."
+        )
+
+    expected_algorithm_headings = [
+        "## Purpose",
+        "## End-to-End Flow",
+        "## Inputs and Final Outputs",
+        "## Complete End-to-End Pseudocode",
+        "## Notebook Relationship",
+    ]
+    for heading in expected_algorithm_headings:
+        if heading not in algorithm_md:
+            errors.append(f"{lab_dir}: Algorithm missing heading {heading!r}.")
+
+    if code_text(notebooks["algorithm.ipynb"]).strip():
+        errors.append(
+            f"{lab_dir}: Algorithm notebook must remain explanatory and contain no code cells."
+        )
+
+    if "main.ipynb" not in algorithm_md:
+        errors.append(
+            f"{lab_dir}: Algorithm notebook does not map its workflow to main.ipynb."
         )
 
     if "## References" not in theory_md:
@@ -326,6 +356,6 @@ if errors:
 
 print(
     f"Notebook QA passed: {len(lab_dirs)} labs, {notebook_count} notebooks. "
-    "Structure, task alignment, titles, requirements, references, Python syntax, "
+    "Structure, task/algorithm alignment, titles, requirements, references, Python syntax, "
     "per-cell strategic comments, main-notebook cleanliness, and output declarations are consistent."
 )

@@ -8,12 +8,13 @@
 
 Planar camera calibration from multiple chessboard views using normalized DLT and Zhang's method.
 
-The lab is organized into four complementary notebooks:
+The lab is organized into five complementary notebooks:
 
 - [Problem Statement](notebooks/problem_statement.ipynb) — problem definition, inputs, expected outputs, and the 13 required tasks.
 - [Requirements](notebooks/requirements.ipynb) — Python environment, required packages, input-data checks, and execution prerequisites.
 - [Theory](notebooks/theory.ipynb) — mathematical formulation, derivations, modeling assumptions, failure modes, and limitations.
-- [Implementation](notebooks/main.ipynb) — executable workflow with code, generated outputs, metrics, diagnostics, final analysis, and validation.
+- [Algorithm](notebooks/algorithm.ipynb) — complete end-to-end procedure aligned stage-by-stage with the Problem Statement and implementation, including outputs, decision points, handoffs, and validation conditions.
+- [Implementation](notebooks/main.ipynb) — executable workflow with code, generated outputs, metrics, diagnostics, and validation.
 
 ## Outputs
 
@@ -45,7 +46,7 @@ python -m pip install -r requirements.txt
 code .
 ```
 
-Open [main.ipynb](notebooks/main.ipynb), select the project `.venv` kernel, and run all cells from top to bottom.
+Review [algorithm.ipynb](notebooks/algorithm.ipynb) for the complete ordered procedure, then open [main.ipynb](notebooks/main.ipynb), select the project `.venv` kernel, and run all cells from top to bottom.
 
 A successful execution ends with:
 
@@ -61,8 +62,9 @@ camera-calibration/
 │   └── calibration_images/
 ├── notebooks/
 │   ├── problem_statement.ipynb
-│   ├── requirements.ipynb
 │   ├── theory.ipynb
+│   ├── requirements.ipynb
+│   ├── algorithm.ipynb
 │   └── main.ipynb
 ├── outputs/
 │   └── figures/
