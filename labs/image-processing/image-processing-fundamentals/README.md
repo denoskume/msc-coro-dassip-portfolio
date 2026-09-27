@@ -103,12 +103,6 @@ Not included:
 - image segmentation;
 - projective geometry and camera calibration.
 
-## Participants
-
-- **Denos Kume**
-
-**MSc. CORO DASSIP — École Centrale de Nantes**
-
 ---
 
 <p align="center">
