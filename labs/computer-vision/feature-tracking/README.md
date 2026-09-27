@@ -81,14 +81,6 @@ Implemented:
 - sequence-level match/inlier analysis;
 - numerical and visual validation.
 
-Not included:
-
-- optical flow;
-- learned feature descriptors;
-- temporal motion models;
-- non-rigid tracking;
-- multi-object tracking;
-- ground-truth localization-error evaluation.
 
 ---
 
