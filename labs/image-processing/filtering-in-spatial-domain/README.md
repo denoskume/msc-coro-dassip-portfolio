@@ -106,12 +106,6 @@ Not included:
 - learned convolutional filters;
 - task-specific computer-vision pipelines.
 
-## Participants
-
-- **Denos Kume**
-
-**MSc. CORO DASSIP — École Centrale de Nantes**
-
 ---
 
 <p align="center">
