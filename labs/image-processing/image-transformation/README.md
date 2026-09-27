@@ -35,6 +35,7 @@ Main outputs:
 - `08_histogram_equalization.png`
 - `09_equalization_mapping.png`
 - `10_intensity_transform_comparison.png`
+- `10_geometric_coordinate_model.png`
 - `11_translation.png`
 - `12_rotation_origin_center.png`
 - `13_scaling.png`
