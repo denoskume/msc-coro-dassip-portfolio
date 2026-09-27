@@ -98,13 +98,6 @@ Implemented:
 - resizing and aspect-ratio reasoning;
 - numerical and visual validation.
 
-Not included:
-
-- spatial convolution and filtering;
-- frequency-domain filtering;
-- projective homography estimation;
-- perspective rectification;
-- image segmentation.
 
 ---
 
