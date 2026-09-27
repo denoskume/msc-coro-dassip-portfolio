@@ -6,6 +6,9 @@ import re
 import sys
 from pathlib import Path
 
+from pyflakes.checker import Checker
+from pyflakes.messages import UndefinedName
+
 EXPECTED_NOTEBOOKS = {
     "theory.ipynb",
     "problem_statement.ipynb",
@@ -65,6 +68,47 @@ def numbered_h2_sections(markdown: str) -> list[str]:
             sections.append(match.group(1).strip())
     return sections
 
+
+
+def find_bare_name_expressions(notebook: dict) -> list[tuple[int, str]]:
+    bare_names: list[tuple[int, str]] = []
+
+    for cell_index, cell in enumerate(notebook.get("cells", []), start=1):
+        if cell.get("cell_type") != "code":
+            continue
+
+        source = cell_source(cell)
+        if not source.strip():
+            continue
+
+        try:
+            tree = ast.parse(source)
+        except SyntaxError:
+            continue
+
+        for statement in tree.body:
+            if isinstance(statement, ast.Expr) and isinstance(statement.value, ast.Name):
+                bare_names.append((cell_index, statement.value.id))
+
+    return bare_names
+
+def find_undefined_names(source: str, filename: str) -> list[str]:
+    try:
+        tree = ast.parse(source, filename=filename, mode="exec")
+    except SyntaxError:
+        return []
+
+    checker = Checker(tree, filename=filename)
+    undefined = [
+        message
+        for message in checker.messages
+        if isinstance(message, UndefinedName)
+    ]
+
+    return sorted({
+        f"{message.message_args[0]} (line {message.lineno})"
+        for message in undefined
+    })
 
 def extract_module_title(markdown: str, suffix: str) -> str | None:
     pattern = re.compile(
@@ -248,6 +292,23 @@ for lab_dir in lab_dirs:
         errors.append(f"{lab_dir}: concatenated main code is invalid: {exc}.")
         continue
 
+
+    bare_name_expressions = find_bare_name_expressions(notebooks["main.ipynb"])
+    for cell_index, name in bare_name_expressions:
+        errors.append(
+            f"{lab_dir}/notebooks/main.ipynb:cell {cell_index}: "
+            f"bare identifier expression {name!r} detected."
+        )
+
+    undefined_names = find_undefined_names(
+        main_code,
+        filename=str(lab_dir / "notebooks" / "main.ipynb"),
+    )
+    for undefined_name in undefined_names:
+        errors.append(
+            f"{lab_dir}: undefined name detected in main.ipynb: {undefined_name}."
+        )
+
     imported_roots: set[str] = set()
     for node in ast.walk(main_tree):
         if isinstance(node, ast.Import):
@@ -291,5 +352,6 @@ if errors:
 print(
     f"Notebook QA passed: {len(lab_dirs)} labs, {notebook_count} notebooks. "
     "Structure, task coverage, titles, requirements, references, Python syntax, "
-    "main-notebook cleanliness, and output declarations are consistent."
+    "undefined-name checks, bare-identifier checks, main-notebook cleanliness, "
+    "and output declarations are consistent."
 )
