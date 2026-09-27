@@ -100,25 +100,6 @@ msc-coro-dassip-portfolio/
 
 ---
 
-## Projects
-
-<p align="center">
-  <a href="https://github.com/denoskume/Background-Subtraction-Fluoroscopy">
-    <img src="assets/project-background-subtraction-light.svg" width="49%" alt="Background Subtraction" />
-  </a>
-  <a href="https://github.com/denoskume/CLAP-Zero-Shot-Audio-Classification">
-    <img src="assets/project-clap-light.svg" width="49%" alt="CLAP Audio Classification" />
-  </a>
-</p>
-
-<p align="center">
-  <a href="https://github.com/denoskume/Python-CardGame">
-    <img src="assets/project-cardgame-light.svg" width="49%" alt="Python CardGame" />
-  </a>
-</p>
-
----
-
 ## Tools and Libraries
 
 <table align="center">
