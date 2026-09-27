@@ -100,12 +100,6 @@ Implemented:
 - cutoff-sensitivity analysis;
 - quantitative and structural validation.
 
-Not included:
-
-- wavelet transforms;
-- learned frequency representations;
-- advanced inverse-problem restoration;
-- segmentation.
 
 ---
 
