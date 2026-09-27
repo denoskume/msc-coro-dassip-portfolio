@@ -53,10 +53,60 @@ notebooks/
 image-processing/
 ├── README.md
 ├── image-processing-fundamentals/
+│   ├── README.md
+│   ├── data/
+│   ├── notebooks/
+│   │   ├── problem_statement.ipynb
+│   │   ├── theory.ipynb
+│   │   ├── requirements.ipynb
+│   │   └── main.ipynb
+│   ├── outputs/
+│   │   └── figures/
+│   └── requirements.txt
 ├── image-transformation/
+│   ├── README.md
+│   ├── data/
+│   ├── notebooks/
+│   │   ├── problem_statement.ipynb
+│   │   ├── theory.ipynb
+│   │   ├── requirements.ipynb
+│   │   └── main.ipynb
+│   ├── outputs/
+│   │   └── figures/
+│   └── requirements.txt
 ├── filtering-in-spatial-domain/
+│   ├── README.md
+│   ├── data/
+│   ├── notebooks/
+│   │   ├── problem_statement.ipynb
+│   │   ├── theory.ipynb
+│   │   ├── requirements.ipynb
+│   │   └── main.ipynb
+│   ├── outputs/
+│   │   └── figures/
+│   └── requirements.txt
 ├── filtering-in-frequency-domain/
+│   ├── README.md
+│   ├── data/
+│   ├── notebooks/
+│   │   ├── problem_statement.ipynb
+│   │   ├── theory.ipynb
+│   │   ├── requirements.ipynb
+│   │   └── main.ipynb
+│   ├── outputs/
+│   │   └── figures/
+│   └── requirements.txt
 └── segmentation/
+    ├── README.md
+    ├── data/
+    ├── notebooks/
+    │   ├── problem_statement.ipynb
+    │   ├── theory.ipynb
+    │   ├── requirements.ipynb
+    │   └── main.ipynb
+    ├── outputs/
+    │   └── figures/
+    └── requirements.txt
 ```
 
 ---
