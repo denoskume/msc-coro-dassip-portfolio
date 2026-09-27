@@ -33,14 +33,12 @@ notebooks/
 - **Theory** — mathematical foundations, assumptions, limitations, and references.
 - **Problem Statement** — context, tasks, inputs, objectives, and deliverables.
 - **Requirements** — environment, dependencies, required data, and installation.
-- **Algorithm** — complete end-to-end procedure, decision points, stage outputs, acceptance checks, and handoffs.
 - **Implementation** — executable code, outputs, metrics, diagnostics, and validation.
 
 ## Module Standard
 
 - repository-relative paths;
 - module-specific `requirements.txt`;
-- explicit algorithm-to-implementation traceability;
 - top-to-bottom implementation workflow;
 - generated figures under `outputs/figures/`;
 - numerical and visual diagnostics;
