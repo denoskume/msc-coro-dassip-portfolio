@@ -81,12 +81,6 @@ Implemented:
 - reprojection analysis;
 - numerical and visual validation.
 
-Not included:
-
-- lens-distortion estimation;
-- nonlinear bundle adjustment;
-- robust outlier rejection;
-- uncertainty propagation.
 
 ---
 
