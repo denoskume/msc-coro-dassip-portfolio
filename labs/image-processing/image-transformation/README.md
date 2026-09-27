@@ -106,12 +106,6 @@ Not included:
 - perspective rectification;
 - image segmentation.
 
-## Participants
-
-- **Denos Kume**
-
-**MSc. CORO DASSIP — École Centrale de Nantes**
-
 ---
 
 <p align="center">
