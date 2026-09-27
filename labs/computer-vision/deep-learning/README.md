@@ -90,13 +90,6 @@ Not included:
 - probability calibration;
 - uncertainty estimation.
 
-## Participants
-
-- **Denos Kume**
-- **Oluwole SHOKUNBI**
-
-**MSc. CORO DASSIP — École Centrale de Nantes**
-
 ---
 
 <p align="center">
