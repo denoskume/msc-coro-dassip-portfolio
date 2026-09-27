@@ -81,14 +81,6 @@ Implemented:
 - prediction/confidence analysis;
 - numerical and visual validation.
 
-Not included:
-
-- CNN architectures;
-- data augmentation;
-- separate validation split;
-- hyperparameter search;
-- probability calibration;
-- uncertainty estimation.
 
 ---
 
