@@ -107,12 +107,6 @@ Not included:
 - advanced inverse-problem restoration;
 - segmentation.
 
-## Participants
-
-- **Denos Kume**
-
-**MSc. CORO DASSIP — École Centrale de Nantes**
-
 ---
 
 <p align="center">
