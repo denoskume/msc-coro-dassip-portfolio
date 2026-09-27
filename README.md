@@ -109,10 +109,6 @@ msc-coro-dassip-portfolio/
       <sub><b>Python</b></sub>
     </td>
     <td align="center" width="100">
-      <img src="assets/tools/numpy.svg" height="44" alt="NumPy" /><br>
-      <sub><b>NumPy</b></sub>
-    </td>
-    <td align="center" width="100">
       <img src="assets/tools/scipy.svg" height="44" alt="SciPy" /><br>
       <sub><b>SciPy</b></sub>
     </td>
@@ -129,10 +125,6 @@ msc-coro-dassip-portfolio/
     <td align="center" width="100">
       <img src="assets/tools/pytorch.svg" height="44" alt="PyTorch" /><br>
       <sub><b>PyTorch</b></sub>
-    </td>
-    <td align="center" width="100">
-      <img src="assets/tools/jupyter.svg" height="44" alt="Jupyter" /><br>
-      <sub><b>Jupyter</b></sub>
     </td>
     <td align="center" width="100">
       <img src="assets/tools/vscode.svg" height="44" alt="VS Code" /><br>
