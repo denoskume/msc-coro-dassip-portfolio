@@ -68,6 +68,14 @@ def numbered_h2_sections(markdown: str) -> list[str]:
             sections.append(match.group(1).strip())
     return sections
 
+def numbered_h2_steps(markdown: str) -> list[tuple[int, str]]:
+    steps = []
+    for line in markdown.splitlines():
+        match = re.match(r"^##\s+(\d+)\.\s+(.+)$", line.strip())
+        if match:
+            steps.append((int(match.group(1)), match.group(2).strip()))
+    return steps
+
 def extract_module_title(markdown: str, suffix: str) -> str | None:
     pattern = re.compile(
         rf"<h1[^>]*>\s*<b>(.*?)\s+—\s+{re.escape(suffix)}</b>\s*</h1>",
@@ -228,7 +236,7 @@ for lab_dir in lab_dirs:
 
     tasks = problem_tasks(problem_md)
     theory_sections = numbered_h2_sections(theory_md)
-    algorithm_sections = numbered_h2_sections(algorithm_md)
+    algorithm_steps = numbered_h2_steps(algorithm_md)
     main_sections = numbered_h2_sections(main_md)
 
     if not tasks:
@@ -237,14 +245,56 @@ for lab_dir in lab_dirs:
         errors.append(
             f"{lab_dir}: Problem Statement tasks and Theory sections are not aligned."
         )
-    if tasks != algorithm_sections:
-        errors.append(
-            f"{lab_dir}: Problem Statement tasks and Algorithm sections are not aligned."
-        )
     if tasks != main_sections:
         errors.append(
             f"{lab_dir}: Problem Statement tasks and Main sections are not aligned."
         )
+
+    if not algorithm_steps:
+        errors.append(f"{lab_dir}: Algorithm contains no numbered coding steps.")
+    else:
+        step_numbers = [number for number, _ in algorithm_steps]
+        expected_numbers = list(range(step_numbers[-1] + 1))
+        if step_numbers != expected_numbers:
+            errors.append(
+                f"{lab_dir}: Algorithm step numbers are not contiguous from 0 to End."
+            )
+        if algorithm_steps[0] != (0, "Start"):
+            errors.append(
+                f"{lab_dir}: Algorithm must begin with '## 0. Start'."
+            )
+        if algorithm_steps[-1][1].strip().lower() != "end":
+            errors.append(
+                f"{lab_dir}: Algorithm must terminate with a numbered 'End' step."
+            )
+
+        coding_instruction_count = algorithm_md.count("**Coding instructions**")
+        if coding_instruction_count != len(algorithm_steps) - 1:
+            errors.append(
+                f"{lab_dir}: every numbered algorithm step except End must contain "
+                f"'**Coding instructions**'."
+            )
+
+    missing_algorithm_tasks = [
+        task for task in tasks
+        if task not in algorithm_md
+    ]
+    if missing_algorithm_tasks:
+        errors.append(
+            f"{lab_dir}: Algorithm Task Coverage is missing "
+            f"{missing_algorithm_tasks}."
+        )
+
+    forbidden_algorithm_phrases = [
+        "Use only validated outputs from the preceding stage.",
+        "Execute the operation defined by this stage",
+        "A validated intermediate result for this stage.",
+    ]
+    for phrase in forbidden_algorithm_phrases:
+        if phrase in algorithm_md:
+            errors.append(
+                f"{lab_dir}: Algorithm contains generic placeholder text: {phrase!r}."
+            )
 
     if "final interpretation" in problem_md.lower():
         errors.append(
@@ -275,9 +325,11 @@ for lab_dir in lab_dirs:
 
     expected_algorithm_headings = [
         "## Purpose",
+        "## Algorithm Rules",
         "## End-to-End Flow",
         "## Inputs and Final Outputs",
         "## Complete End-to-End Pseudocode",
+        "## Task Coverage",
         "## Notebook Relationship",
     ]
     for heading in expected_algorithm_headings:
@@ -356,6 +408,6 @@ if errors:
 
 print(
     f"Notebook QA passed: {len(lab_dirs)} labs, {notebook_count} notebooks. "
-    "Structure, task/algorithm alignment, titles, requirements, references, Python syntax, "
+    "Structure, task coverage, end-to-end algorithm steps, titles, requirements, references, Python syntax, "
     "per-cell strategic comments, main-notebook cleanliness, and output declarations are consistent."
 )
