@@ -59,9 +59,13 @@ for index = 1:numel(fileNames)
     renderDpi = 300;
     exportgraphics(fig,destination,'Resolution',renderDpi)
     imageInfo = imfinfo(destination);
-    if imageInfo.Width < 3840 || imageInfo.Height < 2160
+    retryCount = 0;
+    while imageInfo.Width < 3840 || imageInfo.Height < 2160
+        retryCount = retryCount + 1;
+        assert(retryCount <= 4, ...
+            'Figure %d could not reach 4K after four DPI adjustments.',index)
         scaleFactor = max(3840/imageInfo.Width,2160/imageInfo.Height);
-        renderDpi = ceil(renderDpi * scaleFactor * 1.08);
+        renderDpi = ceil(renderDpi * max(1.20,scaleFactor * 1.15));
         fprintf('Figure %d needs higher DPI; re-exporting at %d DPI\n', ...
             index,renderDpi)
         exportgraphics(fig,destination,'Resolution',renderDpi)
