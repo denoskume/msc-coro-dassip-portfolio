@@ -13,7 +13,7 @@ This laboratory follows the same four-notebook documentation structure as the Co
 
 ## Run in MATLAB
 
-Open `matlab/save_all_figures.m` and run it in MATLAB. It executes `matlab/final_report.m`, generates all 12 figures and saves them to `outputs/figures/`. The main MATLAB report contains **Rosenbrock**, **Signal Enhancement**, and **NMR quadratic exterior penalty**.
+Open `matlab/save_all_figures.m` and run it in MATLAB. It executes `matlab/final_report.m`, renders all 12 figures on larger MATLAB canvases with readable axes and legends, and exports **original 4K+ PNG files (at least 3840 × 2160 pixels, 300 DPI)** directly to `outputs/figures/`. The script checks each exported file's actual pixel dimensions. The main MATLAB report contains **Rosenbrock**, **Signal Enhancement**, and **NMR quadratic exterior penalty**.
 
 ```matlab
 run('matlab/save_all_figures.m')
@@ -36,7 +36,7 @@ run('matlab/save_all_figures.m')
 
 **Scientific caveat:** NMR feasibility convergence and a close fit do not guarantee correct recovery of the distribution. The observed 300% error on synthetic distribution must not be hidden; adding a different regularizer would change the professor's optimization problem.
 
-## Figures — 12 saved MATLAB outputs
+## Figures — 12 original 4K+ MATLAB PNG exports
 
 | Figure | Content |
 |---|---|
