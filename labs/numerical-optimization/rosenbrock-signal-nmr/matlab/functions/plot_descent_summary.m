@@ -39,20 +39,18 @@ plot(pathAxes,1,1,'kp','MarkerFaceColor','k','MarkerSize',10)
 
 set([objectiveAxes,pathAxes,gradientAxes],'FontSize',13,'LineWidth',1.0)
 xlabel(objectiveAxes,'Iteration','FontSize',14)
-ylabel(objectiveAxes,'Objective f(x_k)','FontSize',14)
 title(objectiveAxes,'Objective (log scale)','FontSize',15)
 xlabel(pathAxes,'x_1','FontSize',14)
 ylabel(pathAxes,'x_2','FontSize',14)
 title(pathAxes,'Paths (star = minimum)','FontSize',15)
 xlabel(gradientAxes,'Iteration','FontSize',14)
-ylabel(gradientAxes,'||grad f(x_k)||','FontSize',14)
 title(gradientAxes,'Gradient norms (log scale)','FontSize',15)
 grid(objectiveAxes,'on'); grid(pathAxes,'on'); grid(gradientAxes,'on')
 objectiveAxes.XMinorGrid = 'off'; objectiveAxes.YMinorGrid = 'off';
 gradientAxes.XMinorGrid = 'off'; gradientAxes.YMinorGrid = 'off';
 
 % Manual figure-wide legend: no MATLAB legend auto-layout, no text collisions.
-legendColumns = min(3,numberOfMethods);
+legendColumns = min(3,ceil(numberOfMethods/2));
 legendWidth = 0.78;
 legendLeft = 0.13;
 legendCellWidth = legendWidth / legendColumns;
