@@ -226,6 +226,53 @@ for lab_dir in lab_dirs:
     if set(notebooks) != EXPECTED_NOTEBOOKS:
         continue
 
+    # MATLAB-only modules keep the same four-document portfolio contract.
+    # The professor requires MATLAB: their computational implementation lives
+    # in .m files, not in Python/Jupyter code cells.
+    if (lab_dir / "matlab" / "save_all_figures.m").is_file():
+        problem_md = markdown_text(notebooks["problem_statement.ipynb"])
+        theory_md = markdown_text(notebooks["theory.ipynb"])
+        requirements_md = markdown_text(notebooks["requirements.ipynb"])
+        main_md = markdown_text(notebooks["main.ipynb"])
+        tasks = problem_tasks(problem_md)
+        headings_theory = numbered_h2_sections(theory_md)
+        headings_main = numbered_h2_sections(main_md)
+        if not tasks or tasks != headings_theory or tasks != headings_main:
+            errors.append(f"{lab_dir}: MATLAB lab task/theory/main sections mismatch.")
+        titles = [
+            extract_module_title(markdown_text(notebooks[name]), suffix)
+            for name, suffix in (
+                ("problem_statement.ipynb", "Problem Statement"),
+                ("requirements.ipynb", "Requirements"),
+                ("theory.ipynb", "Theory"),
+            )
+        ]
+        if not titles[0] or len(set(titles)) != 1 or titles[0] not in main_md:
+            errors.append(f"{lab_dir}: MATLAB lab notebook titles mismatch.")
+        for heading in (
+            "## 1. Software Requirements",
+            "## 2. Required Data",
+            "## 3. Installation",
+        ):
+            if heading not in requirements_md:
+                errors.append(f"{lab_dir}: missing MATLAB requirement heading {heading}.")
+        if "## References" not in theory_md or "https://" not in theory_md:
+            errors.append(f"{lab_dir}: missing MATLAB theory references.")
+        for name, notebook in notebooks.items():
+            if any(c.get("cell_type") == "code" for c in notebook.get("cells", [])):
+                errors.append(f"{lab_dir}: {name} should document MATLAB .m code, not execute Python.")
+        for item in (
+            "matlab/final_report.m",
+            "matlab/save_all_figures.m",
+            "matlab/functions/optimdescent.m",
+            "matlab/functions/quadraticpenalty.m",
+        ):
+            if not (lab_dir / item).is_file():
+                errors.append(f"{lab_dir}: missing required MATLAB file {item}.")
+        if "MATLAB" not in requirements_md:
+            errors.append(f"{lab_dir}: MATLAB requirement not documented.")
+        continue
+
     problem_md = markdown_text(notebooks["problem_statement.ipynb"])
     theory_md = markdown_text(notebooks["theory.ipynb"])
     requirements_md = markdown_text(notebooks["requirements.ipynb"])
