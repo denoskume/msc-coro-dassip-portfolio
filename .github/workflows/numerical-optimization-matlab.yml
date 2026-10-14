@@ -1,0 +1,96 @@
+name: Generate numerical optimization MATLAB figures
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - .github/workflows/numerical-optimization-matlab.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  matlab-figures:
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - name: Check out portfolio
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - name: Check out validated MATLAB lab source data
+        uses: actions/checkout@v4
+        with:
+          repository: denoskume/m2-sip
+          ref: main
+          path: .source/m2-sip
+
+      - name: Include authentic NMR measurements
+        shell: bash
+        run: |
+          set -euo pipefail
+          target="labs/numerical-optimization/rosenbrock-signal-nmr"
+          mkdir -p "$target/matlab/data" "$target/outputs/figures"
+          cp ".source/m2-sip/MATSIP/Numerical_Optimization/Completed_Lab/final_submission/data/NMRdataMeasures.mat" \
+            "$target/matlab/data/NMRdataMeasures.mat"
+          test -s "$target/matlab/data/NMRdataMeasures.mat"
+
+      - name: Set up MATLAB (public repository)
+        uses: matlab-actions/setup-matlab@v3
+
+      - name: Run professor-required MATLAB and save all figures
+        uses: matlab-actions/run-command@v3
+        with:
+          command: cd('labs/numerical-optimization/rosenbrock-signal-nmr/matlab'); save_all_figures
+
+      - name: Check all twelve genuine MATLAB PNG exports
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import struct
+          lab = Path("labs/numerical-optimization/rosenbrock-signal-nmr")
+          names = [
+              "01_rosenbrock_surface.png",
+              "02_fixed_step_comparison.png",
+              "03_armijo_convergence.png",
+              "04_four_methods_start_a.png",
+              "05_six_methods_start_a.png",
+              "06_four_methods_start_b.png",
+              "07_six_methods_start_b.png",
+              "08_original_noisy_signal.png",
+              "09_enhanced_signal.png",
+              "10_regularization_selection.png",
+              "11_synthetic_nmr.png",
+              "12_measured_nmr.png",
+          ]
+          folder = lab / "outputs" / "figures"
+          for name in names:
+              path = folder / name
+              assert path.is_file() and path.stat().st_size > 5000, f"Missing figure {name}"
+              data = path.read_bytes()[:24]
+              assert data[:8] == b"\x89PNG\r\n\x1a\n", f"Invalid PNG {name}"
+              width, height = struct.unpack(">II", data[16:24])
+              assert width >= 300 and height >= 200, (name, width, height)
+              print(f"{name}: {width}x{height}, {path.stat().st_size} bytes")
+          assert (lab / "matlab" / "data" / "NMRdataMeasures.mat").stat().st_size > 100
+          print("PASS: 12 genuine MATLAB PNGs and authentic NMR data")
+          PY
+
+      - name: Commit generated figures and NMR data to portfolio
+        shell: bash
+        run: |
+          set -euo pipefail
+          target="labs/numerical-optimization/rosenbrock-signal-nmr"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add "$target/outputs/figures" "$target/matlab/data/NMRdataMeasures.mat"
+          if ! git diff --cached --quiet; then
+            git commit -m "results(matlab): archive all 12 real Numerical Optimization figures and NMR data"
+            git push origin HEAD:main
+          else
+            echo "All MATLAB figures already match committed versions."
+          fi
