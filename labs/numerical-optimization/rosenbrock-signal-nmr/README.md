@@ -36,6 +36,10 @@ run('matlab/save_all_figures.m')
 
 **Scientific caveat:** NMR feasibility convergence and a close fit do not guarantee correct recovery of the distribution. The observed 300% error on synthetic distribution must not be hidden; adding a different regularizer would change the professor's optimization problem.
 
+### Figure layout validation (14 October 2026)
+
+The final MATLAB export uses **three panels with explicit inter-panel margins** and a **separate figure-wide legend strip** for Figures 2–7. Objective/gradient information is provided in their panel headings instead of redundant vertical labels that previously collided with logarithmic ticks. The two-panel figures use MATLAB `tiledlayout` with loose spacing. All **12 PNGs were re-rendered directly in MATLAB at 4K+**, and the regenerated fixed-step, four-method and six-method charts were visually checked for text collisions. Original numerical algorithms were not changed.
+
 ## Figures — 12 original 4K+ MATLAB PNG exports
 
 | Figure | Content |
