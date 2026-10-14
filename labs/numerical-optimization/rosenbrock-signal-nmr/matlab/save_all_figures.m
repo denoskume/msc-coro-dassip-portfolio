@@ -37,7 +37,7 @@ assert(numel(figureHandles)==numel(fileNames), ...
 for index = 1:numel(fileNames)
     fig = figureHandles(index);
     if ismember(index,[2 3 4 5 6 7])
-        canvasSize = [60 60 1950 880]; % Three-panel optimization comparisons
+        canvasSize = [60 60 1950 1300]; % Taller canvas prevents tight-crop height loss
     else
         canvasSize = [60 60 1700 950]; % Two-panel signal/NMR figures
     end
