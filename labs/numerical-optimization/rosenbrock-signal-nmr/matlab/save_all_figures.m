@@ -31,12 +31,38 @@ assert(numel(figureHandles)==numel(fileNames), ...
     'Expected %d figures, but MATLAB produced %d.', ...
     numel(fileNames),numel(figureHandles))
 
+%% High-resolution output — genuine MATLAB rendering (4K minimum)
+% Enlarge the ACTUAL figure canvas before exporting. This redraws vectors,
+% text, curves and axes directly inside MATLAB; it is NOT image upscaling.
 for index = 1:numel(fileNames)
+    fig = figureHandles(index);
+    if ismember(index,[2 3 4 5 6 7])
+        canvasSize = [60 60 1950 880]; % Three-panel optimization comparisons
+    else
+        canvasSize = [60 60 1700 950]; % Two-panel signal/NMR figures
+    end
+    set(fig,'Units','pixels','Position',canvasSize,'Color','w');
+    axesHandles = findall(fig,'Type','axes');
+    for axisIndex = 1:numel(axesHandles)
+        ax = axesHandles(axisIndex);
+        set(ax,'FontSize',max(15,ax.FontSize),'LineWidth',1.1)
+    end
+    legendHandles = findall(fig,'Type','legend');
+    for legendIndex = 1:numel(legendHandles)
+        leg = legendHandles(legendIndex);
+        set(leg,'FontSize',max(13,leg.FontSize))
+    end
+    drawnow
     destination = fullfile(figureFolder,fileNames{index});
-    exportgraphics(figureHandles(index),destination,'Resolution',160)
+    exportgraphics(fig,destination,'Resolution',300)
+    imageInfo = imfinfo(destination);
+    assert(imageInfo.Width>=3840 && imageInfo.Height>=2160, ...
+        'Figure %d resolution too low: %d x %d pixels', ...
+        index,imageInfo.Width,imageInfo.Height)
     fileInfo = dir(destination);
-    assert(~isempty(fileInfo) && fileInfo.bytes>0, ...
-        'Figure export failed: %s',destination)
-    fprintf('Saved Figure %d: %s (%d bytes)\n',index,fileNames{index},fileInfo.bytes)
+    assert(~isempty(fileInfo) && fileInfo.bytes>20000, ...
+        'HD figure export failed: %s',destination)
+    fprintf('Saved 4K Figure %d: %s (%d x %d pixels, %d bytes)\n', ...
+        index,fileNames{index},imageInfo.Width,imageInfo.Height,fileInfo.bytes)
 end
-fprintf('PASS: all %d MATLAB figures saved in %s\n',numel(fileNames),figureFolder)
+fprintf('PASS: all %d authentic MATLAB PNG figures exported at 4K+ resolution\n',numel(fileNames))
