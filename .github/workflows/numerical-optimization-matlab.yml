@@ -5,6 +5,7 @@ on:
     branches: [main]
     paths:
       - .github/workflows/numerical-optimization-matlab.yml
+      - labs/numerical-optimization/rosenbrock-signal-nmr/matlab/**
   workflow_dispatch:
 
 permissions:
@@ -20,22 +21,12 @@ jobs:
         with:
           persist-credentials: true
 
-      - name: Check out validated MATLAB lab source data
-        uses: actions/checkout@v4
-        with:
-          repository: denoskume/m2-sip
-          ref: main
-          path: .source/m2-sip
-
-      - name: Include authentic NMR measurements
+      - name: Verify included NMR dataset
         shell: bash
         run: |
           set -euo pipefail
-          target="labs/numerical-optimization/rosenbrock-signal-nmr"
-          mkdir -p "$target/matlab/data" "$target/outputs/figures"
-          cp ".source/m2-sip/MATSIP/Numerical_Optimization/Completed_Lab/final_submission/data/NMRdataMeasures.mat" \
-            "$target/matlab/data/NMRdataMeasures.mat"
-          test -s "$target/matlab/data/NMRdataMeasures.mat"
+          test -s "labs/numerical-optimization/rosenbrock-signal-nmr/matlab/data/NMRdataMeasures.mat"
+          echo "Authentic NMR measurement data present."
 
       - name: Set up MATLAB (public repository)
         uses: matlab-actions/setup-matlab@v3
