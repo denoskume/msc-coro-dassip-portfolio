@@ -61,14 +61,14 @@ jobs:
           folder = lab / "outputs" / "figures"
           for name in names:
               path = folder / name
-              assert path.is_file() and path.stat().st_size > 5000, f"Missing figure {name}"
+              assert path.is_file() and path.stat().st_size > 20000, f"Missing/empty HD figure {name}"
               data = path.read_bytes()[:24]
               assert data[:8] == b"\x89PNG\r\n\x1a\n", f"Invalid PNG {name}"
               width, height = struct.unpack(">II", data[16:24])
-              assert width >= 300 and height >= 200, (name, width, height)
+              assert width >= 3840 and height >= 2160, f"Not 4K: {name}: {width}x{height}"
               print(f"{name}: {width}x{height}, {path.stat().st_size} bytes")
           assert (lab / "matlab" / "data" / "NMRdataMeasures.mat").stat().st_size > 100
-          print("PASS: 12 genuine MATLAB PNGs and authentic NMR data")
+          print("PASS: 12 genuine 4K+ MATLAB PNGs and authentic NMR data")
           PY
 
       - name: Commit generated figures and NMR data to portfolio
