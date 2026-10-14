@@ -17,10 +17,11 @@ disp('Hessian at x* = [1;1]'); disp(hStar)
 x1 = -4:0.05:4; x2 = -5:0.05:20;
 [X1,X2] = meshgrid(x1,x2);
 logCriterion = log1p(parameters.b*(X2-X1.^2).^2+(1-X1).^2);
-figure
-subplot(1,2,1); meshc(x1,x2,logCriterion); grid on
+figure('Name','Rosenbrock surface','Color','w')
+rosenbrockLayout = tiledlayout(1,2,'TileSpacing','loose','Padding','loose');
+nexttile(rosenbrockLayout); meshc(x1,x2,logCriterion); grid on
 xlabel('x_1'); ylabel('x_2'); zlabel('log(1+f)'); title('Rosenbrock surface')
-subplot(1,2,2); contour(x1,x2,logCriterion,32,'LineColor',[0.65 0.65 0.65]); hold on
+nexttile(rosenbrockLayout); contour(x1,x2,logCriterion,32,'LineColor',[0.65 0.65 0.65]); hold on
 plot(1,1,'kp','MarkerSize',10,'LineWidth',2)
 xlabel('x_1'); ylabel('x_2'); title('Level sets'); grid on
 
@@ -120,11 +121,12 @@ for k = 1:numel(lambdaValues)
 end
 [bestError,bestIndex] = min(estimationError);
 fprintf('Best lambda=%.4f, estimation error=%.4f\n',lambdaValues(bestIndex),bestError)
-figure
-subplot(1,2,1); plot(lambdaValues,estimationError); hold on
+figure('Name','Regularization choice','Color','w')
+regularizationLayout = tiledlayout(1,2,'TileSpacing','loose','Padding','loose');
+nexttile(regularizationLayout); plot(lambdaValues,estimationError); hold on
 plot(lambdaValues(bestIndex),bestError,'kp','MarkerSize',9)
 xlabel('lambda'); ylabel('||xhat-x||_2'); title('Estimation error'); grid on
-subplot(1,2,2); loglog(fidelity,smoothness); hold on
+nexttile(regularizationLayout); loglog(fidelity,smoothness); hold on
 loglog(fidelity(bestIndex),smoothness(bestIndex),'kp','MarkerSize',9)
 xlabel('Data fidelity'); ylabel('Smoothness'); title('Regularization trade-off'); grid on
 
@@ -156,11 +158,12 @@ distributionError = norm(estimatedDistribution-trueDistribution)/norm(trueDistri
 syntheticFitError = norm(nmrResult.reconstructedSignal-observations)/norm(observations);
 fprintf('Synthetic NMR: distribution rel. error=%.3f, signal fit rel. error=%.3e\n', ...
     distributionError,syntheticFitError)
-figure
-subplot(1,2,1); plot(relaxationTimes,trueDistribution,'k'); hold on
+figure('Name','Synthetic NMR','Color','w')
+syntheticLayout = tiledlayout(1,2,'TileSpacing','loose','Padding','loose');
+nexttile(syntheticLayout); plot(relaxationTimes,trueDistribution,'k'); hold on
 plot(relaxationTimes,estimatedDistribution); title('Synthetic distribution (no smoothing)')
 xlabel('Relaxation time'); legend('True','Penalty'); grid on
-subplot(1,2,2); plot(measurementTimes,observations,'k'); hold on
+nexttile(syntheticLayout); plot(measurementTimes,observations,'k'); hold on
 plot(measurementTimes,nmrResult.reconstructedSignal)
 title('Synthetic NMR fit'); xlabel('Measurement time'); grid on
 legend('Observed','Reconstructed','Location','best')
@@ -182,10 +185,11 @@ if isfile(dataFile)
     measuredFitError = norm(measuredResult.reconstructedSignal-observed)/norm(observed);
     fprintf('Measured NMR signal fit relative error=%.3e\n',measuredFitError)
     % A small signal residual does not prove that the recovered distribution is unique.
-    figure
-    subplot(1,2,1); plot(relaxationGrid,estimate); grid on
+    figure('Name','Measured NMR','Color','w')
+    measuredLayout = tiledlayout(1,2,'TileSpacing','loose','Padding','loose');
+    nexttile(measuredLayout); plot(relaxationGrid,estimate); grid on
     title('Measured distribution (no smoothing)'); xlabel('Relaxation time')
-    subplot(1,2,2); plot(times,observed,'k'); hold on
+    nexttile(measuredLayout); plot(times,observed,'k'); hold on
     plot(times,measuredResult.reconstructedSignal); grid on
     title('Measured signal fit'); xlabel('Measurement time')
     legend('Observed','Reconstructed','Location','best')
