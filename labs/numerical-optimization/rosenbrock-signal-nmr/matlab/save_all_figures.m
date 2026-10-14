@@ -54,8 +54,19 @@ for index = 1:numel(fileNames)
     end
     drawnow
     destination = fullfile(figureFolder,fileNames{index});
-    exportgraphics(fig,destination,'Resolution',300)
+    % Headless MATLAB may crop extra figure canvas space. Measure the real
+    % image dimensions and increase *rendering DPI* if either side is short.
+    renderDpi = 300;
+    exportgraphics(fig,destination,'Resolution',renderDpi)
     imageInfo = imfinfo(destination);
+    if imageInfo.Width < 3840 || imageInfo.Height < 2160
+        scaleFactor = max(3840/imageInfo.Width,2160/imageInfo.Height);
+        renderDpi = ceil(renderDpi * scaleFactor * 1.08);
+        fprintf('Figure %d needs higher DPI; re-exporting at %d DPI\n', ...
+            index,renderDpi)
+        exportgraphics(fig,destination,'Resolution',renderDpi)
+        imageInfo = imfinfo(destination);
+    end
     assert(imageInfo.Width>=3840 && imageInfo.Height>=2160, ...
         'Figure %d resolution too low: %d x %d pixels', ...
         index,imageInfo.Width,imageInfo.Height)
