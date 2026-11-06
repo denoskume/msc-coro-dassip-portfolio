@@ -98,9 +98,7 @@ msc-coro-dassip-portfolio/
 │       └── segmentation/
 ├── .github/
 │   └── workflows/
-│       └── notebook-qa.yml
-├── scripts/
-│   └── validate_notebooks.py
+│       └── numerical-optimization-matlab.yml
 ├── .gitignore
 └── README.md
 ```
