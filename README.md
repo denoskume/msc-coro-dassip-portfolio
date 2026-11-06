@@ -28,16 +28,16 @@ Beyond the code, the notebooks document the experimental reasoning: how methods 
 ### Computer Vision
 
 <p align="center">
-  <a href="labs/computer-vision/camera-calibration">
+  <a href="computer-vision/camera-calibration">
     <img src="assets/labs/camera-calibration.svg" width="49%" alt="Camera Calibration" />
   </a>
-  <a href="labs/computer-vision/feature-tracking">
+  <a href="computer-vision/feature-tracking">
     <img src="assets/labs/feature-tracking.svg" width="49%" alt="Feature Detection and Tracking" />
   </a>
 </p>
 
 <p align="center">
-  <a href="labs/computer-vision/deep-learning">
+  <a href="computer-vision/deep-learning">
     <img src="assets/labs/deep-learning.svg" width="49%" alt="Deep Learning" />
   </a>
 </p>
@@ -45,25 +45,25 @@ Beyond the code, the notebooks document the experimental reasoning: how methods 
 ### Image Processing
 
 <p align="center">
-  <a href="labs/image-processing/image-processing-fundamentals">
+  <a href="image-processing/image-processing-fundamentals">
     <img src="assets/labs/image-processing-fundamentals.svg" width="49%" alt="Image Processing Fundamentals" />
   </a>
-  <a href="labs/image-processing/image-transformation">
+  <a href="image-processing/image-transformation">
     <img src="assets/labs/image-transformation.svg" width="49%" alt="Image Transformation" />
   </a>
 </p>
 
 <p align="center">
-  <a href="labs/image-processing/filtering-in-spatial-domain">
+  <a href="image-processing/filtering-in-spatial-domain">
     <img src="assets/labs/filtering-spatial.svg" width="49%" alt="Spatial-Domain Filtering" />
   </a>
-  <a href="labs/image-processing/filtering-in-frequency-domain">
+  <a href="image-processing/filtering-in-frequency-domain">
     <img src="assets/labs/filtering-frequency.svg" width="49%" alt="Frequency-Domain Filtering" />
   </a>
 </p>
 
 <p align="center">
-  <a href="labs/image-processing/segmentation">
+  <a href="image-processing/segmentation">
     <img src="assets/labs/segmentation.svg" width="49%" alt="Image Segmentation" />
   </a>
 </p>
@@ -72,7 +72,7 @@ Beyond the code, the notebooks document the experimental reasoning: how methods 
 
 ### Numerical Optimization (MATLAB)
 
-**[Rosenbrock, Signal Enhancement & NMR](labs/numerical-optimization/rosenbrock-signal-nmr/)** — MATSIP Part I, with a MATLAB-only implementation, four documentation notebooks, numerical validation, and **12 MATLAB-generated figures**. Includes Gradient, Fletcher–Reeves, Newton, BFGS, Gauss–Newton, Levenberg–Marquardt, signal denoising, and nonnegative NMR inversion.
+**[Rosenbrock, Signal Enhancement & NMR](numerical-optimization/rosenbrock-signal-nmr/)** — MATSIP Part I, with a MATLAB-only implementation, four documentation notebooks, numerical validation, and **12 MATLAB-generated figures**. Includes Gradient, Fletcher–Reeves, Newton, BFGS, Gauss–Newton, Levenberg–Marquardt, signal denoising, and nonnegative NMR inversion.
 
 The module follows the same documentation and outputs layout as the Image Processing labs; its executable work remains in `.m` files, following the professor's instruction.
 
@@ -82,20 +82,22 @@ The module follows the same documentation and outputs layout as the Image Proces
 
 ```text
 msc-coro-dassip-portfolio/
-├── labs/
-│   ├── computer-vision/
-│   │   ├── README.md
-│   │   ├── camera-calibration/
-│   │   ├── deep-learning/
-│   │   └── feature-tracking/
-│   │
-│   └── image-processing/
-│       ├── README.md
-│       ├── filtering-in-frequency-domain/
-│       ├── filtering-in-spatial-domain/
-│       ├── image-processing-fundamentals/
-│       ├── image-transformation/
-│       └── segmentation/
+├── computer-vision/
+│   ├── README.md
+│   ├── camera-calibration/
+│   ├── deep-learning/
+│   └── feature-tracking/
+├── image-processing/
+│   ├── README.md
+│   ├── filtering-in-frequency-domain/
+│   ├── filtering-in-spatial-domain/
+│   ├── image-processing-fundamentals/
+│   ├── image-transformation/
+│   └── segmentation/
+├── numerical-optimization/
+│   ├── README.md
+│   └── rosenbrock-signal-nmr/
+├── assets/
 ├── .github/
 │   └── workflows/
 │       └── numerical-optimization-matlab.yml

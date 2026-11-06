@@ -6,4 +6,4 @@ MATSIP Part I: numerical optimization and inverse problems at Centrale Nantes. *
 
 - **[Rosenbrock, Signal Enhancement and NMR](rosenbrock-signal-nmr/)** — gradient, Fletcher–Reeves, Newton, BFGS, Gauss–Newton, Levenberg–Marquardt, quadratic denoising and exterior-penalty inversion; **12 genuine MATLAB figures**.
 
-[Back to portfolio](../../README.md)
+[Back to portfolio](../README.md)

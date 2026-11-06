@@ -4,15 +4,15 @@
 <p align="right"><strong>MSc. CORO DASSIP</strong></p>
 <br clear="both">
 
-<h1 align="center">Feature Detection & Tracking</h1>
+<h1 align="center">Camera Calibration</h1>
 
-Feature-based object tracking in video using ORB keypoints/descriptors, Hamming-distance matching, RANSAC homography estimation, and perspective transformation of an initial object bounding box.
+Planar camera calibration from multiple chessboard views using normalized DLT and Zhang's method.
 
 The lab is organized into four complementary notebooks:
 
-- [Problem Statement](notebooks/problem_statement.ipynb) — problem definition, fixed tracking configuration, expected outputs, and the 13 required tasks.
+- [Problem Statement](notebooks/problem_statement.ipynb) — problem definition, inputs, expected outputs, and the 13 required tasks.
 - [Requirements](notebooks/requirements.ipynb) — Python environment, required packages, input-data checks, and execution prerequisites.
-- [Theory](notebooks/theory.ipynb) — theoretical foundations of ORB, binary descriptors, Hamming matching, homographies, RANSAC, and tracking diagnostics.
+- [Theory](notebooks/theory.ipynb) — mathematical formulation, derivations, modeling assumptions, failure modes, and limitations.
 - [Implementation](notebooks/main.ipynb) — executable workflow with code, generated outputs, metrics, diagnostics, and validation.
 
 ## Outputs
@@ -25,18 +25,19 @@ outputs/figures/
 
 Main outputs:
 
-- `reference_orb_keypoints.png`
-- `representative_tracking_frames.png`
-- `ransac_inlier_matches.png`
-- `matches_and_inliers_by_frame.png`
-- `inlier_ratio_by_frame.png`
+- `detected_chessboard_corners.png`
+- `homography_estimation_pipeline.png`
+- `estimated_camera_poses.png`
+- `reprojection_results.png`
+- `mean_reprojection_error_by_view.png`
+- `reprojection_error_distribution.png`
 
 ## Run
 
 From the repository root:
 
 ```bash
-cd labs/computer-vision/feature-tracking
+cd computer-vision/camera-calibration
 
 python -m venv .venv
 source .venv/bin/activate
@@ -49,15 +50,15 @@ Open [main.ipynb](notebooks/main.ipynb), select the project `.venv` kernel, and 
 A successful execution ends with:
 
 ```text
-All Feature Detection validation checks passed.
+All Camera Calibration validation checks passed.
 ```
 
 ## Lab Structure
 
 ```text
-feature-tracking/
+camera-calibration/
 ├── data/
-│   └── video1.mp4
+│   └── calibration_images/
 ├── notebooks/
 │   ├── problem_statement.ipynb
 │   ├── theory.ipynb
@@ -73,12 +74,11 @@ feature-tracking/
 
 Implemented:
 
-- fixed-reference ORB feature extraction;
-- Hamming-distance descriptor matching;
-- BFMatcher cross-check;
-- RANSAC homography estimation;
-- perspective-transformed object tracking;
-- sequence-level match/inlier analysis;
+- planar camera calibration;
+- normalized DLT;
+- Zhang calibration;
+- intrinsic and pose recovery;
+- reprojection analysis;
 - numerical and visual validation.
 
 
@@ -86,10 +86,10 @@ Implemented:
 
 <p align="center">
   <a href="../README.md">
-    <img src="../../../assets/nav-computer-vision.svg" height="44" alt="Computer Vision" />
+    <img src="../../assets/nav-computer-vision.svg" height="44" alt="Computer Vision" />
   </a>
   &nbsp;&nbsp;
-  <a href="../../../README.md">
-    <img src="../../../assets/nav-portfolio-home.svg" height="44" alt="Portfolio home" />
+  <a href="../../README.md">
+    <img src="../../assets/nav-portfolio-home.svg" height="44" alt="Portfolio home" />
   </a>
 </p>

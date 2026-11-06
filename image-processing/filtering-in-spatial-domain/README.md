@@ -49,7 +49,7 @@ Main outputs include:
 From the repository root:
 
 ```bash
-cd labs/image-processing/filtering-in-spatial-domain
+cd image-processing/filtering-in-spatial-domain
 
 python -m venv .venv
 source .venv/bin/activate
@@ -104,10 +104,10 @@ Implemented:
 
 <p align="center">
   <a href="../README.md">
-    <img src="../../../assets/nav-image-processing.svg" height="44" alt="Image Processing" />
+    <img src="../../assets/nav-image-processing.svg" height="44" alt="Image Processing" />
   </a>
   &nbsp;&nbsp;
-  <a href="../../../README.md">
-    <img src="../../../assets/nav-portfolio-home.svg" height="44" alt="Portfolio home" />
+  <a href="../../README.md">
+    <img src="../../assets/nav-portfolio-home.svg" height="44" alt="Portfolio home" />
   </a>
 </p>

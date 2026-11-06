@@ -4,15 +4,15 @@
 <p align="right"><strong>MSc. CORO DASSIP</strong></p>
 <br clear="both">
 
-<h1 align="center">Camera Calibration</h1>
+<h1 align="center">Deep Learning</h1>
 
-Planar camera calibration from multiple chessboard views using normalized DLT and Zhang's method.
+Handwritten-digit classification with a one-hidden-layer MLP in PyTorch, comparing hidden sizes of 128, 256, and 512 neurons on MNIST.
 
 The lab is organized into four complementary notebooks:
 
-- [Problem Statement](notebooks/problem_statement.ipynb) — problem definition, inputs, expected outputs, and the 13 required tasks.
+- [Problem Statement](notebooks/problem_statement.ipynb) — problem definition, fixed experiment settings, expected outputs, and the 13 required tasks.
 - [Requirements](notebooks/requirements.ipynb) — Python environment, required packages, input-data checks, and execution prerequisites.
-- [Theory](notebooks/theory.ipynb) — mathematical formulation, derivations, modeling assumptions, failure modes, and limitations.
+- [Theory](notebooks/theory.ipynb) — mathematical formulation of the MLP, optimization objective, controlled model-capacity comparison, and confidence analysis.
 - [Implementation](notebooks/main.ipynb) — executable workflow with code, generated outputs, metrics, diagnostics, and validation.
 
 ## Outputs
@@ -25,19 +25,19 @@ outputs/figures/
 
 Main outputs:
 
-- `detected_chessboard_corners.png`
-- `homography_estimation_pipeline.png`
-- `estimated_camera_poses.png`
-- `reprojection_results.png`
-- `mean_reprojection_error_by_view.png`
-- `reprojection_error_distribution.png`
+- `mnist_sample_batch.png`
+- `training_loss_comparison.png`
+- `mnist_predictions_128.png`
+- `mnist_predictions_256.png`
+- `mnist_predictions_512.png`
+- `pr_accuracy_curve.png`
 
 ## Run
 
 From the repository root:
 
 ```bash
-cd labs/computer-vision/camera-calibration
+cd computer-vision/deep-learning
 
 python -m venv .venv
 source .venv/bin/activate
@@ -50,15 +50,14 @@ Open [main.ipynb](notebooks/main.ipynb), select the project `.venv` kernel, and 
 A successful execution ends with:
 
 ```text
-All Camera Calibration validation checks passed.
+All Deep Learning validation checks passed.
 ```
 
 ## Lab Structure
 
 ```text
-camera-calibration/
+deep-learning/
 ├── data/
-│   └── calibration_images/
 ├── notebooks/
 │   ├── problem_statement.ipynb
 │   ├── theory.ipynb
@@ -74,11 +73,12 @@ camera-calibration/
 
 Implemented:
 
-- planar camera calibration;
-- normalized DLT;
-- Zhang calibration;
-- intrinsic and pose recovery;
-- reprojection analysis;
+- local MNIST loading and normalization;
+- one-hidden-layer MLP;
+- Batch Normalization and ReLU;
+- Cross-Entropy training with Adam;
+- hidden-width comparison;
+- prediction/confidence analysis;
 - numerical and visual validation.
 
 
@@ -86,10 +86,10 @@ Implemented:
 
 <p align="center">
   <a href="../README.md">
-    <img src="../../../assets/nav-computer-vision.svg" height="44" alt="Computer Vision" />
+    <img src="../../assets/nav-computer-vision.svg" height="44" alt="Computer Vision" />
   </a>
   &nbsp;&nbsp;
-  <a href="../../../README.md">
-    <img src="../../../assets/nav-portfolio-home.svg" height="44" alt="Portfolio home" />
+  <a href="../../README.md">
+    <img src="../../assets/nav-portfolio-home.svg" height="44" alt="Portfolio home" />
   </a>
 </p>

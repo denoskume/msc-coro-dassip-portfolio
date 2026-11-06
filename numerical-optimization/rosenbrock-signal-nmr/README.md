@@ -78,4 +78,4 @@ rosenbrock-signal-nmr/
 **Provenance:** MATLAB source and data migrated from the [validated MATSIP course laboratory](https://github.com/denoskume/m2-sip/tree/main/MATSIP/Numerical_Optimization/Completed_Lab/final_submission). All figures are produced by MATLAB, never recreated artificially.
 
 ---
-[Back to the Numerical Optimization modules](../README.md) · [Portfolio home](../../../README.md)
+[Back to the Numerical Optimization modules](../README.md) · [Portfolio home](../../README.md)

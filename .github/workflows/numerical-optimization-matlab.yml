@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths:
       - .github/workflows/numerical-optimization-matlab.yml
-      - labs/numerical-optimization/rosenbrock-signal-nmr/matlab/**
+      - numerical-optimization/rosenbrock-signal-nmr/matlab/**
   workflow_dispatch:
 
 permissions:
@@ -25,7 +25,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          test -s "labs/numerical-optimization/rosenbrock-signal-nmr/matlab/data/NMRdataMeasures.mat"
+          test -s "numerical-optimization/rosenbrock-signal-nmr/matlab/data/NMRdataMeasures.mat"
           echo "Authentic NMR measurement data present."
 
       - name: Set up MATLAB (public repository)
@@ -34,7 +34,7 @@ jobs:
       - name: Run professor-required MATLAB and save all figures
         uses: matlab-actions/run-command@v3
         with:
-          command: cd('labs/numerical-optimization/rosenbrock-signal-nmr/matlab'); save_all_figures
+          command: cd('numerical-optimization/rosenbrock-signal-nmr/matlab'); save_all_figures
 
       - name: Check all twelve genuine MATLAB PNG exports
         shell: bash
@@ -43,7 +43,7 @@ jobs:
           python - <<'PY'
           from pathlib import Path
           import struct
-          lab = Path("labs/numerical-optimization/rosenbrock-signal-nmr")
+          lab = Path("numerical-optimization/rosenbrock-signal-nmr")
           names = [
               "01_rosenbrock_surface.png",
               "02_fixed_step_comparison.png",
@@ -75,7 +75,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          target="labs/numerical-optimization/rosenbrock-signal-nmr"
+          target="numerical-optimization/rosenbrock-signal-nmr"
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add "$target/outputs/figures" "$target/matlab/data/NMRdataMeasures.mat"
