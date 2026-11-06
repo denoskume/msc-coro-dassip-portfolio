@@ -27,46 +27,17 @@ Beyond the code, the notebooks document the experimental reasoning: how methods 
 
 ### Computer Vision
 
-<p align="center">
-  <a href="computer-vision/camera-calibration">
-    <img src="assets/labs/camera-calibration.svg" width="49%" alt="Camera Calibration" />
-  </a>
-  <a href="computer-vision/feature-tracking">
-    <img src="assets/labs/feature-tracking.svg" width="49%" alt="Feature Detection and Tracking" />
-  </a>
-</p>
-
-<p align="center">
-  <a href="computer-vision/deep-learning">
-    <img src="assets/labs/deep-learning.svg" width="49%" alt="Deep Learning" />
-  </a>
-</p>
+- [Camera Calibration](computer-vision/camera-calibration/)
+- [Feature Detection and Tracking](computer-vision/feature-tracking/)
+- [Deep Learning](computer-vision/deep-learning/)
 
 ### Image Processing
 
-<p align="center">
-  <a href="image-processing/image-processing-fundamentals">
-    <img src="assets/labs/image-processing-fundamentals.svg" width="49%" alt="Image Processing Fundamentals" />
-  </a>
-  <a href="image-processing/image-transformation">
-    <img src="assets/labs/image-transformation.svg" width="49%" alt="Image Transformation" />
-  </a>
-</p>
-
-<p align="center">
-  <a href="image-processing/filtering-in-spatial-domain">
-    <img src="assets/labs/filtering-spatial.svg" width="49%" alt="Spatial-Domain Filtering" />
-  </a>
-  <a href="image-processing/filtering-in-frequency-domain">
-    <img src="assets/labs/filtering-frequency.svg" width="49%" alt="Frequency-Domain Filtering" />
-  </a>
-</p>
-
-<p align="center">
-  <a href="image-processing/segmentation">
-    <img src="assets/labs/segmentation.svg" width="49%" alt="Image Segmentation" />
-  </a>
-</p>
+- [Image Processing Fundamentals](image-processing/image-processing-fundamentals/)
+- [Image Transformation](image-processing/image-transformation/)
+- [Spatial-Domain Filtering](image-processing/filtering-in-spatial-domain/)
+- [Frequency-Domain Filtering](image-processing/filtering-in-frequency-domain/)
+- [Image Segmentation](image-processing/segmentation/)
 
 ---
 
