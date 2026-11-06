@@ -70,13 +70,6 @@ Beyond the code, the notebooks document the experimental reasoning: how methods 
 
 ---
 
-### Numerical Optimization (MATLAB)
-
-**[Rosenbrock, Signal Enhancement & NMR](numerical-optimization/rosenbrock-signal-nmr/)** — MATSIP Part I, with a MATLAB-only implementation, four documentation notebooks, numerical validation, and **12 MATLAB-generated figures**. Includes Gradient, Fletcher–Reeves, Newton, BFGS, Gauss–Newton, Levenberg–Marquardt, signal denoising, and nonnegative NMR inversion.
-
-The module follows the same documentation and outputs layout as the Image Processing labs; its executable work remains in `.m` files, following the professor's instruction.
-
----
 
 ## Repository Structure
 
@@ -94,13 +87,7 @@ msc-coro-dassip-portfolio/
 │   ├── image-processing-fundamentals/
 │   ├── image-transformation/
 │   └── segmentation/
-├── numerical-optimization/
-│   ├── README.md
-│   └── rosenbrock-signal-nmr/
 ├── assets/
-├── .github/
-│   └── workflows/
-│       └── numerical-optimization-matlab.yml
 ├── .gitignore
 └── README.md
 ```

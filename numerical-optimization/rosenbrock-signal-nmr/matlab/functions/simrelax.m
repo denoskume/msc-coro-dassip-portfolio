@@ -1,8 +1,0 @@
-function [K] = simrelax(T,t,mode)
-dT = (T(end)-T(1))/length(T);
-switch mode
-case 'T1'
-  K = (1-exp(-kron(t(:),1./(T(:))')))*dT;
-case 'T2'
-  K = exp(-kron(t(:),1./(T(:))'))*dT;
-end
