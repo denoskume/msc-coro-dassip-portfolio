@@ -33,18 +33,16 @@
     <div class="card-foot"><small>Technical field note</small><a href="${esc(href)}" class="circle-arrow" aria-label="Open article">↗</a></div></div></article>`;
   }
   function home() {
-    const calibration = projects.find(p => p.slug === 'camera-calibration');
-    return `<div class="container studio">
-      <header class="studio-intro"><div><p class="studio-byline">Denos Kume / Centrale Nantes</p><h1>Computer vision studio</h1><p>Run image analysis in your browser or explore the experiments behind the tools.</p></div>
-      <div class="studio-paths"><a class="btn btn-primary" href="#/workspace/calibration">Launch workspace →</a><a class="btn btn-outline" href="#/projects">Explore projects</a></div></header>
-      <section class="instrument" aria-labelledby="instrument-title">
-        <div class="instrument-copy"><p class="instrument-kicker">Industrial inspection</p><h2 id="instrument-title">Camera <br>calibration</h2>
-        <p>Inspect the geometry of a camera across nine chessboard poses. Compare detected corners with their projected locations.</p>
-        <a class="instrument-link" href="#/projects/camera-calibration">Open case study ↗</a>
-        <dl><div><dt>Board views</dt><dd>9</dd></div><div><dt>Measured corners</dt><dd>432</dd></div><div><dt>Overall RMS</dt><dd>0.534 <small>px</small></dd></div></dl></div>
-        <div class="instrument-console"><div class="console-head"><strong>Corner inspector</strong><label><input id="preview-overlay" type="checkbox" checked> Overlay</label></div>
-        <div id="preview-board"></div><div class="console-controls"><label>View <select id="preview-view">${calibration.views.map((v,i)=>`<option value="${i}" ${i===7?'selected':''}>${esc(v.label)}</option>`).join('')}</select></label><output id="preview-result" aria-live="polite"></output></div></div>
-      </section>
+    const featured = projects.filter(project => project.featured);
+    return `<section class="featured-carousel" aria-label="Featured projects" aria-roledescription="carousel">
+      <h1 class="opt-sr">Computer vision studio</h1>
+      <div class="featured-stage">${featured.map((project, i) => `<article class="featured-slide" ${i ? 'hidden inert' : ''}>
+        <img class="featured-art" src="${esc(project.cover)}" alt="${esc(project.subtitle)}" decoding="async">
+        <div class="featured-caption"><div><small>${esc(project.category)}</small><h2><a href="#/projects/${esc(project.slug)}">${esc(project.title)} ↗</a></h2></div></div>
+      </article>`).join('')}</div>
+      <div class="featured-controls"><div class="featured-dots">${featured.map((p,i)=>`<button data-slide="${i}" aria-label="Show ${esc(p.title)}" aria-pressed="${!i}"></button>`).join('')}</div>
+      <div><button data-back aria-label="Previous project">←</button><button data-play>Pause</button><button data-forward aria-label="Next project">→</button></div></div>
+      </section><div class="container studio"><div class="studio-paths"><a class="btn btn-primary" href="#/workspace/calibration">Launch workspace →</a><a class="btn btn-outline" href="#/projects">Explore projects</a></div>
       <section class="studio-work"><div class="studio-heading"><h2>Featured projects</h2><a href="#/projects">All ${projects.length} projects →</a></div>
       <div class="card-grid">${projects.filter(p=>p.featured).map(projectCard).join('')}</div></section>
       <section class="studio-work"><div class="studio-heading"><h2>Engineering notes</h2><a href="#/blog">Read the blog →</a></div>
@@ -52,18 +50,64 @@
     </div>`;
   }
 
-  function mountHomePreview() {
-    const select = document.getElementById('preview-view');
-    const overlay = document.getElementById('preview-overlay');
-    const views = projects.find(p => p.slug === 'camera-calibration').views;
-    function renderBoard() {
-      const view = views[select.selectedIndex];
-      document.getElementById('preview-board').innerHTML = `<svg viewBox="0 0 640 480" role="img" aria-label="Chessboard pose ${esc(view.label)}"><image href="${esc(view.src)}" width="640" height="480"/>${overlay.checked ? view.marks : ''}</svg>`;
-      document.getElementById('preview-result').textContent = view.metrics.split(' · ').pop();
+  let stopFeaturedCarousel = () => {};
+  function mountFeaturedCarousel() {
+    const carousel = document.querySelector('.featured-carousel');
+    const slides = Array.from(carousel.querySelectorAll('.featured-slide'));
+    const indicators = Array.from(carousel.querySelectorAll('[data-slide]'));
+    const toggle = carousel.querySelector('[data-play]');
+    const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    let index = 0, timer, paused = reducedMotion.matches;
+    const animate = (slide, from, to) => slide.animate(
+      [{transform:'translateX('+from+'%)'}, {transform:'translateX('+to+'%)'}],
+      {duration:600,easing:'cubic-bezier(.42,0,.2,1)'}
+    );
+    function schedule() {
+      clearTimeout(timer);
+      if (!paused && !document.hidden && slides.length > 1)
+        timer = setTimeout(() => show((index + 1) % slides.length), 5000);
     }
-    select.onchange = renderBoard;
-    overlay.onchange = renderBoard;
-    renderBoard();
+    function show(next, direction = 1) {
+      if (next !== index) {
+        const leaving = slides[index], entering = slides[next];
+        for (const slide of slides) {
+          slide.getAnimations().forEach(animation => animation.cancel());
+          slide.hidden = slide !== entering;
+        }
+        entering.inert = false;
+        leaving.inert = true;
+        if (!reducedMotion.matches) {
+          leaving.hidden = false;
+          const motion = animate(leaving, 0, -direction * 100);
+          motion.onfinish = () => { if (leaving !== slides[index]) leaving.hidden = true; };
+          animate(entering, direction * 100, 0);
+        }
+        index = next;
+        indicators.forEach((button,i) => button.setAttribute('aria-pressed', i === index));
+      }
+      schedule();
+    }
+    function setPaused(value) {
+      paused = value;
+      toggle.textContent = paused ? 'Play' : 'Pause';
+      toggle.setAttribute('aria-label', paused ? 'Play automatic slideshow' : 'Pause automatic slideshow');
+      schedule();
+    }
+    toggle.onclick = () => setPaused(!paused);
+    carousel.querySelector('[data-back]').onclick = () => show((index + slides.length - 1) % slides.length, -1);
+    carousel.querySelector('[data-forward]').onclick = () => show((index + 1) % slides.length);
+    indicators.forEach((button,i) => button.onclick = () => show(i,i < index ? -1 : 1));
+    carousel.addEventListener('focusin', event => { if (event.target.closest('.featured-slide')) setPaused(true); });
+    const preferenceChanged = () => setPaused(reducedMotion.matches);
+    reducedMotion.addEventListener('change', preferenceChanged);
+    document.addEventListener('visibilitychange',schedule);
+    setPaused(paused);
+    stopFeaturedCarousel = () => {
+      clearTimeout(timer);
+      reducedMotion.removeEventListener('change',preferenceChanged);
+      document.removeEventListener('visibilitychange',schedule);
+      stopFeaturedCarousel = () => {};
+    };
   }
   function projectsPage() {
     return `<div class="container page-intro">${crumbs([{label:'Home',href:'#/'},{label:'Projects'}])}${eyebrow('PROJECT LIBRARY')}<h1>Project library</h1>
@@ -231,11 +275,12 @@ function mountReview(project) {
     else if (parts[0] === 'blog' && parts.length === 2) { const a = articles.find(x => x.slug === parts[1]); html = a ? articlePage(a) : missing(); title = a ? a.title : 'Not found'; }
     else if (parts[0] === 'contact' && parts.length === 1) { html = contactPage(); title = 'Contact'; }
     else { html = missing(); title = 'Not found'; }
+    stopFeaturedCarousel();
     VisionWorkspace.leave();
     document.body.classList.toggle('camera-route', parts[0] === 'projects' && parts[1] === 'camera-calibration');
     root.innerHTML = html;
     if (parts[0] === "workspace" && VisionWorkspace.has(parts[1])) VisionWorkspace.mount(parts[1]);
-    if (!parts.length) mountHomePreview();
+    if (!parts.length) mountFeaturedCarousel();
     if (parts.length === 1 && parts[0] === "projects") updateGrid();
     if (parts[0] === "projects" && parts.length === 2) mountReview(projects.find(p => p.slug === parts[1]));
     document.title = `${title} — Denos Kume`;
