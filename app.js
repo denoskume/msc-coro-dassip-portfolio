@@ -97,9 +97,15 @@ function mountReview(project) {
     const view = views[index];
     const figure = panel.querySelector('figure');
     figure.innerHTML = view.marks
-      ? `<svg viewBox="0 0 640 480" role="img" aria-label="Board and corner locations for ${esc(view.label)}"><image width="640" height="480" href="${esc(view.src)}"/>${overlay.checked ? view.marks : ''}</svg>`
+      ? `<svg viewBox="0 0 640 480" role="img" aria-label="Board and corner locations for ${esc(view.label)}"><image width="640" height="480" href="${esc(project.slug === "camera-calibration" ? "lab/samples/" + view.label : view.src)}"/>${overlay.checked ? view.marks : ''}</svg>`
       : image(view.src, 'Original, enhanced, manual tracing, predicted mask and error overlay for ' + view.label);
     panel.querySelector('output').textContent = view.metrics;
+    if (panel.querySelector('[data-rms]')) {
+      const [mean, rms] = view.metrics.split(' · ');
+      panel.querySelector('[data-rms]').textContent = rms.replace(/^RMS (?:error )?/, '').replace(' px','');
+      panel.querySelector('[data-mean]').textContent = mean.replace('Mean error ', '');
+      panel.querySelectorAll('[data-frame]').forEach(button => button.setAttribute('aria-pressed', Number(button.dataset.frame) === index));
+    }
     status.value = drafts[view.label]?.status || 'Pending';
     notes.value = drafts[view.label]?.notes || '';
     panel.querySelector('[data-prev]').disabled = index === 0;
@@ -110,6 +116,13 @@ function mountReview(project) {
     try { localStorage.setItem(key, JSON.stringify(drafts)); }
     catch { panel.querySelector('[data-feedback]').textContent = 'Export your worksheet to keep these notes.'; }
   }
+  panel.querySelectorAll('[data-frame]').forEach(button => button.onclick = () => {
+    select.selectedIndex = Number(button.dataset.frame); display();
+  });
+  document.querySelectorAll('[data-opt-tab]').forEach(button => button.onclick = () => {
+    document.querySelectorAll('[data-opt-tab]').forEach(tab => tab.setAttribute('aria-pressed', tab === button));
+    document.querySelectorAll('[data-opt-page]').forEach(page => page.hidden = page.dataset.optPage !== button.dataset.optTab);
+  });
   select.onchange = display;
   if (overlay) overlay.onchange = display;
   for (const [selector, step] of [['[data-prev]',-1],['[data-next]',1]]) {
@@ -126,7 +139,32 @@ function mountReview(project) {
   };
   display();
 }
+  function cameraCase(project) {
+    const boardViews = project.views;
+    const photo = view => 'lab/samples/' + view.label;
+    return `<article class="optics"><div class="opt-wrap">
+    <nav class="opt-path" aria-label="Breadcrumb"><a href="#/projects">Projects</a> / Industrial inspection</nav>
+    <header class="opt-title"><div><h1>Camera calibration<span>.</span></h1><p>Recover camera geometry from nine chessboard poses. Inspect the corner fit, compare models, or run a calibration on your own images.</p></div>
+    <a class="opt-launch" href="#/workspace/calibration">Launch workspace <b aria-hidden="true">↗</b></a></header>
+    <div class="opt-tabs" role="group" aria-label="Case study sections">${['Inspector','Validation','Implementation'].map((name,i)=>`<button type="button" data-opt-tab="${i}" aria-pressed="${!i}">${name}</button>`).join('')}</div>
+    <section class="opt-sheet" data-opt-page="0" id="review">
+      <div class="opt-viewer"><div class="opt-toolbar"><strong>Capture viewer</strong><label><input data-overlay type="checkbox" checked> Corner overlay</label></div>
+      <figure></figure><div class="opt-transport"><button data-prev aria-label="Previous capture">←</button><label><select data-view aria-label="Current capture">${boardViews.map((v,i)=>`<option value="${i}">${esc(v.label)}</option>`).join('')}</select></label><button data-next aria-label="Next capture">→</button><small>640 × 480 px</small></div>
+      <div class="opt-strip" aria-label="Capture thumbnails">${boardViews.map((v,i)=>`<button data-frame="${i}" aria-label="Inspect ${esc(v.label)}"><img src="${photo(v)}" alt=""><span>${esc(v.label.replace('.jpg',''))}</span></button>`).join('')}</div></div>
+      <aside class="opt-readout"><h2>Capture analysis</h2><p>Linear Zhang model</p><div class="opt-value"><span>Reprojection RMS</span><strong data-rms></strong><small>pixels</small></div>
+      <dl><div><dt>Target</dt><dd>8 × 6 corners</dd></div><div><dt>Square pitch</dt><dd>30 mm</dd></div><div><dt>Mean error</dt><dd data-mean></dd></div></dl>
+      <p class="opt-key"><i></i> Measured corner <i></i> Projected corner</p>
+      <details><summary>Review notes</summary><label>Status<select data-status><option>Pending</option><option>Reviewed</option><option>Investigate</option></select></label><label>Observations<textarea rows="2"></textarea></label><button data-export>Export worksheet</button><span data-feedback role="status"></span></details>
+      <output aria-live="polite" class="opt-sr"></output></aside></section>
+    <section class="opt-report" data-opt-page="1" hidden><div class="opt-report-head"><h2>Prediction on unseen poses</h2><p>Fit on eight views, place the ninth board using 24 corners, then measure the error on the other 24. Repeat once per pose.</p></div><div class="opt-results"><div><small>Linear Zhang</small><strong>0.395 <em>px</em></strong></div><div><small>Refined with distortion</small><strong>0.352 <em>px</em></strong></div><div><small>Test corners per model</small><strong>216</strong></div></div>
+    <img class="opt-chart" src="https://raw.githubusercontent.com/denoskume/camera-calibration/6cdf4031d37f2fc9c2f374a986f31856fe4bd005/outputs/figures/held_out_view_errors.png" alt="Held-out RMS errors by board pose for both camera models">
+    <p>Both models had their largest held-out error on img3.jpg. The refined model reduced pooled RMS by 10.7%. Verifying part dimensions in millimetres still requires a calibrated reference part.</p></section>
+    <section class="opt-report" data-opt-page="2" hidden><h2>Implementation</h2><p>${esc(project.challenge)}</p><ol class="number-list">${project.approach.map(x=>`<li>${esc(x)}</li>`).join('')}</ol><div class="code-box"><div class="code-top"><span>${esc(project.codeTitle)}</span><button data-copy-code="${esc(project.slug)}">Copy code</button></div><pre><code>${esc(project.code)}</code></pre></div><div class="detail-actions">${extBtn(project.notebook,'Executed notebook')}${extBtn(project.github,'Repository')}</div><h3>Diagnostic figures</h3><div class="figure-grid">${project.gallery.map(g=>`<figure class="figure"><button data-lightbox="${esc(g.src)}" data-caption="${esc(g.caption)}">${image(g.src,g.caption)}</button><figcaption>${esc(g.caption)}</figcaption></figure>`).join('')}</div></section>
+    <footer class="opt-credit"><span>Denos Kume · Centrale Nantes</span><a href="#/projects">Back to projects →</a></footer></div></article>`;
+  }
+
   function detailPage(p) {
+    if (p.slug === "camera-calibration") return cameraCase(p);
     const anchors = [['challenge','Challenge'],['approach','Workflow'],['results','Results & limits'],['figures','Visual evidence'],['code','Code snapshot']];
     if (p.views) anchors.push(['review','Integrated lab review']);
     const stats = p.metrics.map(x => `<div class="stat-tile"><div class="value">${esc(x.value)}</div><div class="label">${esc(x.label)}</div><div class="context">${esc(x.context)}</div></div>`).join('');
@@ -194,6 +232,7 @@ function mountReview(project) {
     else if (parts[0] === 'contact' && parts.length === 1) { html = contactPage(); title = 'Contact'; }
     else { html = missing(); title = 'Not found'; }
     VisionWorkspace.leave();
+    document.body.classList.toggle('camera-route', parts[0] === 'projects' && parts[1] === 'camera-calibration');
     root.innerHTML = html;
     if (parts[0] === "workspace" && VisionWorkspace.has(parts[1])) VisionWorkspace.mount(parts[1]);
     if (!parts.length) mountHomePreview();
