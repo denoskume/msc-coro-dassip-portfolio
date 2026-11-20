@@ -65,9 +65,54 @@
     count.textContent = `${found.length} ${found.length === 1 ? 'project' : 'projects'} found`;
     grid.innerHTML = found.length ? found.map(projectCard).join('') : '<div class="empty-state" style="grid-column:1/-1"><h3>No matches yet.</h3><p>Try another keyword or category.</p><button class="btn btn-outline btn-sm" type="button" data-reset>Clear filters</button></div>';
   }
+function mountReview(project) {
+  const panel = document.querySelector('#review');
+  if (!panel || !project?.views) return;
+  const views = project.views;
+  const select = panel.querySelector('[data-view]');
+  const overlay = panel.querySelector('[data-overlay]');
+  const status = panel.querySelector('[data-status]');
+  const notes = panel.querySelector('textarea');
+  const key = 'portfolio-review-v1/' + project.slug;
+  let drafts = {};
+  try { drafts = JSON.parse(localStorage.getItem(key)) || {}; } catch {}
+  function display() {
+    const index = Number(select.value);
+    const view = views[index];
+    const figure = panel.querySelector('figure');
+    figure.innerHTML = view.marks
+      ? `<svg viewBox="0 0 640 480" role="img" aria-label="Board and corner locations for ${esc(view.label)}"><image width="640" height="480" href="${esc(view.src)}"/>${overlay.checked ? view.marks : ''}</svg>`
+      : image(view.src, 'Original, enhanced, manual tracing, predicted mask and error overlay for ' + view.label);
+    panel.querySelector('output').textContent = view.metrics;
+    status.value = drafts[view.label]?.status || 'Pending';
+    notes.value = drafts[view.label]?.notes || '';
+    panel.querySelector('[data-prev]').disabled = index === 0;
+    panel.querySelector('[data-next]').disabled = index === views.length - 1;
+  }
+  function save() {
+    drafts[views[select.selectedIndex].label] = {status: status.value, notes: notes.value};
+    try { localStorage.setItem(key, JSON.stringify(drafts)); }
+    catch { panel.querySelector('[data-feedback]').textContent = 'Export your worksheet to keep these notes.'; }
+  }
+  select.onchange = display;
+  if (overlay) overlay.onchange = display;
+  for (const [selector, step] of [['[data-prev]',-1],['[data-next]',1]]) {
+    panel.querySelector(selector).onclick = () => { select.selectedIndex += step; display(); };
+  }
+  status.onchange = save;
+  notes.oninput = save;
+  panel.querySelector('[data-export]').onclick = () => {
+    const rows = [['View','Result','Review status','Observations'], ...views.map(v => [v.label,v.metrics,drafts[v.label]?.status || 'Pending',drafts[v.label]?.notes || ''])];
+    const csv = rows.map(row => row.map(x => '"' + x.replaceAll('"','""') + '"').join(',')).join('\r\n');
+    const url = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8'}));
+    const link = document.createElement('a'); link.href = url; link.download = project.slug + '-review.csv'; link.click();
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
+  };
+  display();
+}
   function detailPage(p) {
     const anchors = [['challenge','Challenge'],['approach','Workflow'],['results','Results & limits'],['figures','Visual evidence'],['code','Code snapshot']];
-    if (p.demo) anchors.push(['review','Integrated lab review']);
+    if (p.views) anchors.push(['review','Integrated lab review']);
     const stats = p.metrics.map(x => `<div class="stat-tile"><div class="value">${esc(x.value)}</div><div class="label">${esc(x.label)}</div><div class="context">${esc(x.context)}</div></div>`).join('');
     const figures = p.gallery.map(g => `<figure class="figure"><button type="button" data-lightbox="${esc(g.src)}" data-caption="${esc(g.caption)}" aria-label="Enlarge ${esc(g.caption)}">${image(g.src,g.caption)}</button><figcaption>${esc(g.caption)}</figcaption></figure>`).join('');
     const related = projects.filter(x => x.slug !== p.slug && x.category === p.category).slice(0,3);
@@ -81,10 +126,9 @@
     <section class="content-section" id="approach"><h2>Method & workflow</h2><ol class="number-list">${p.approach.map(x => `<li>${esc(x)}</li>`).join('')}</ol></section>
     <section class="content-section" id="results"><h2>Results & interpretation</h2><p>${esc(p.result)}</p><div class="notice"><strong>Limitations.</strong> ${esc(p.limitations)}</div></section>
     <section class="content-section" id="figures"><h2>Visual evidence</h2><p>Figures are drawn from the actual project outputs. Select an image to inspect it at full size.</p><div class="figure-grid">${figures}</div></section>
-    <section class="content-section" id="code"><h2>Code snapshot</h2><p>An illustrative, simplified Python concept — not a verbatim extract. The source repository includes the complete executable notebook.</p>
+    <section class="content-section" id="code"><h2>Code snapshot</h2><p>${p.excerpt ? 'From the executed project notebook.' : 'Illustrative Python excerpt. See the notebook for the full implementation.'}</p>
       <div class="code-box"><div class="code-top"><span class="code-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>${esc(p.codeTitle)}</span><button type="button" data-copy-code="${esc(p.slug)}">Copy code</button></div><pre><code class="language-python">${esc(p.code)}</code></pre></div></section>
-    ${p.demo ? `<section class="content-section" id="review"><h2>Interactive review — inside the portfolio</h2><p>This technical viewer remains embedded on the project page; the original link is available for full-screen review. Your browser may restrict third-party frames.</p>
-      <div class="review-preview"><iframe title="${esc(p.subtitle)} technical review" loading="lazy" referrerpolicy="no-referrer" sandbox="allow-scripts allow-same-origin allow-forms allow-downloads" src="${esc(safeURL(p.demo))}"></iframe><div class="review-caption">Existing lab review · ${ext(p.demo,'Open standalone source')}</div></div></section>` : ''}
+    ${p.views ? `<section class="content-section workbench" id="review"><h2>${p.views[0].marks ? 'Inspect calibration corners' : 'Review instrument traces'}</h2><p>${p.views[0].marks ? 'Cyan circles show measured corners. Orange crosses show projected locations.' : 'Compare the tracing with the prediction. Green marks overlap, orange marks extra detections, and blue marks missed segments.'}</p><div class="view-tools"><button data-prev>Previous</button><label>View <select data-view>${p.views.map((v,i)=>'<option value="'+i+'">'+esc(v.label)+'</option>').join('')}</select></label><button data-next>Next</button>${p.views[0].marks ? '<label><input type="checkbox" checked data-overlay> Show corners</label>' : ''}</div><figure></figure><output aria-live="polite"></output><div class="review-fields"><label>Assessment<select data-status><option>Pending</option><option>Reviewed</option><option>Investigate</option></select></label><label>Observations<textarea rows="2"></textarea></label></div><button data-export>Export worksheet (CSV)</button> <span data-feedback role="status"></span></section>` : ''}
     <section class="content-section"><h2>Reproduce the work</h2><p>The repository contains the complete workflow, assumptions, implementation and generated figures.</p><div class="detail-actions">${extBtn(p.github,'Project repository','primary')}${extBtn(p.notebook,'Notebook')}</div></section>
     </div><aside class="sidebar" aria-label="Project page links"><div class="side-card"><h3>Contents</h3><nav class="side-nav">${anchors.map(([id,label]) => `<a href="#${esc(id)}" data-anchor="${esc(id)}">${esc(label)}</a>`).join('')}</nav></div>
       <div class="side-card"><h3>Explore source</h3>${extBtn(p.github,'GitHub repository')}${extBtn(p.notebook,'Executed notebook')}${p.demo ? extBtn(p.demo,'Original reviewer') : ''}</div>
@@ -133,6 +177,7 @@
     else if (parts[0] === 'contact' && parts.length === 1) { html = contactPage(); title = 'Contact'; }
     else { html = missing(); title = 'Not found'; }
     root.innerHTML = html;
+    if (parts[0] === "projects" && parts.length === 2) mountReview(projects.find(p => p.slug === parts[1]));
     document.title = `${title} — Denos Kume`;
     document.querySelectorAll('[data-nav]').forEach(link => { const a = link.dataset.nav; const active = (!parts.length && a === 'home') || (parts.length > 0 && a === parts[0]); link.classList.toggle('active', !!active); if (active) link.setAttribute('aria-current','page'); else link.removeAttribute('aria-current'); });
     document.getElementById('primary-nav').classList.remove('open'); document.getElementById('menu-toggle').setAttribute('aria-expanded','false');

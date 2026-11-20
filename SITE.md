@@ -6,7 +6,7 @@ This repository hosts a **static, responsive portfolio application** for Denos K
 
 - **Home:** introduction, selected work, results and writing.
 - **Projects:** searchable cards with category filters.
-- **Project detail (`#/projects/<slug>`):** challenge, methods, metrics, limitations, image gallery with zoom, illustrative code snippets with copy control, links to the real notebook and an optional embedded technical viewer.
+- **Project detail (`#/projects/<slug>`):** challenge, methods, metrics, limitations, image gallery with zoom, copyable notebook excerpts or labeled illustrative snippets, links to the real notebook and native view selection and review tools for the calibration and fluoroscopy projects.
 - **Research:** completed academic case studies clearly separated from exploratory research interests.
 - **Blog:** technical articles grounded in the available experiments.
 - **Contact:** validated contact form, spam honeypot, relay-service feedback and an email fallback.
@@ -34,7 +34,7 @@ An included GitHub Actions workflow (`.github/workflows/deploy-pages.yml`) build
 - `styles.css` contains the responsive design and accessibility styles.
 - `index.html` provides the semantic shell, metadata and non-JavaScript fallback.
 
-External case-study images are loaded from their public original GitHub repositories. Laboratory figures use relative paths in this repository. Existing notebook files, output figures and standalone technical reviews **remain untouched**. The integrated project interface is the primary presentation; original reviews are embedded where available and remain linked as source materials.
+External case-study images are loaded from their public original GitHub repositories. Laboratory figures use relative paths in this repository. Existing notebook files, output figures and standalone technical reviews **remain untouched**. The integrated project interface is the primary presentation; the two featured workflows run directly inside the case study and support saved assessments and CSV export.
 
 Technical code blocks are **illustrative** unless explicitly documented otherwise. They are not presented as verbatim excerpts from notebooks. Performance results cite the evaluation context and limitations supplied by their original README files.
 

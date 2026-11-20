@@ -1,6 +1,6 @@
 # Portfolio website
 
-A unified, responsive portfolio website is now provided at [`index.html`](index.html). It includes **Home, Projects, Research, Blog, and Contact**, with dedicated in-site project pages, code previews, results, figure galleries and embedded technical reviews. The original laboratory files and notebooks are preserved below.
+[Open the interactive portfolio](https://raw.githack.com/denoskume/msc-coro-dassip-portfolio/main/index.html) · [Browse projects](https://raw.githack.com/denoskume/msc-coro-dassip-portfolio/main/index.html#/projects) It includes **Home, Projects, Research, Blog, and Contact**, with dedicated in-site project pages, code previews, results, figure galleries and in-page technical reviews. The original laboratory files and notebooks are preserved below.
 
 **Run locally:** `python -m http.server 8000` from the repository root, then open `http://localhost:8000/`. See [SITE.md](SITE.md) for setup, content editing, contact form, deployment and accessibility notes.
 
