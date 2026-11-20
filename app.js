@@ -35,8 +35,8 @@
   function home() {
     const calibration = projects.find(p => p.slug === 'camera-calibration');
     return `<div class="container studio">
-      <header class="studio-intro"><div><p class="studio-byline">Denos Kume / Centrale Nantes</p><h1>Computer vision studio</h1><p>Explore my experiments in image processing and applied machine learning.</p></div>
-      <a class="btn btn-outline" href="#/contact">Contact Denos ↗</a></header>
+      <header class="studio-intro"><div><p class="studio-byline">Denos Kume / Centrale Nantes</p><h1>Computer vision studio</h1><p>Run image analysis in your browser or explore the experiments behind the tools.</p></div>
+      <div class="studio-paths"><a class="btn btn-primary" href="#/workspace/calibration">Launch workspace →</a><a class="btn btn-outline" href="#/projects">Explore projects</a></div></header>
       <section class="instrument" aria-labelledby="instrument-title">
         <div class="instrument-copy"><p class="instrument-kicker">Industrial inspection</p><h2 id="instrument-title">Camera <br>calibration</h2>
         <p>Inspect the geometry of a camera across nine chessboard poses. Compare detected corners with their projected locations.</p>
@@ -135,7 +135,7 @@ function mountReview(project) {
     const recommendations = related.length ? related : projects.filter(x => x.slug !== p.slug).slice(0,3);
     return `<section class="detail-hero"><div class="container">${crumbs([{label:'Home',href:'#/'},{label:'Projects',href:'#/projects'},{label:p.title}])}
     <div class="detail-grid"><div>${eyebrow(p.category+' / '+p.year)}<h1>${esc(p.title)}</h1><p class="subtitle">${esc(p.subtitle)}</p><p class="intro">${esc(p.summary)}</p>${tags(p.tags)}
-      <div class="detail-actions">${extBtn(p.github,'View source','primary')}${extBtn(p.notebook,'View notebook')}</div><p class="context">${esc(p.context)}</p></div>
+      <div class="detail-actions">${p.views ? btn("#/workspace/"+(p.slug==="camera-calibration"?"calibration":"motion"),"Launch workspace") : ""}${extBtn(p.github,'View source','outline')}${extBtn(p.notebook,'View notebook')}</div><p class="context">${esc(p.context)}</p></div>
       <div class="detail-hero-media">${image(p.cover,p.subtitle)}<p class="media-caption">Original project output · click the figures below to inspect</p></div></div></div></section>
     <div class="container"><div class="stats-grid">${stats}</div><div class="content-layout"><div class="project-main">
     ${p.views ? `<section class="content-section workbench" id="review"><h2>${p.views[0].marks ? 'Inspect calibration corners' : 'Review instrument traces'}</h2><p>${p.views[0].marks ? 'Cyan circles show measured corners. Orange crosses show projected locations.' : 'Compare the tracing with the prediction. Green marks overlap, orange marks extra detections, and blue marks missed segments.'}</p><div class="view-tools"><button data-prev>Previous</button><label>View <select data-view>${p.views.map((v,i)=>'<option value="'+i+'">'+esc(v.label)+'</option>').join('')}</select></label><button data-next>Next</button>${p.views[0].marks ? '<label><input type="checkbox" checked data-overlay> Show corners</label>' : ''}</div><figure></figure><output aria-live="polite"></output><div class="review-fields"><label>Assessment<select data-status><option>Pending</option><option>Reviewed</option><option>Investigate</option></select></label><label>Observations<textarea rows="2"></textarea></label></div><button data-export>Export worksheet (CSV)</button> <span data-feedback role="status"></span></section>` : ''}
@@ -185,6 +185,7 @@ function mountReview(project) {
     try { parts = decodeURIComponent(raw).split('?')[0].split('/').filter(Boolean); } catch { parts = []; }
     let html, title = 'Computer Vision & Applied AI';
     if (!parts.length) html = home();
+    else if (parts[0] === "workspace" && parts.length === 2 && VisionWorkspace.has(parts[1])) { html = VisionWorkspace.page(parts[1]); title = "Vision workspace"; }
     else if (parts[0] === 'projects' && parts.length === 1) { html = projectsPage(); title = 'Projects'; }
     else if (parts[0] === 'projects' && parts.length === 2) { const p = projects.find(x => x.slug === parts[1]); html = p ? detailPage(p) : missing(); title = p ? p.subtitle : 'Not found'; }
     else if (parts[0] === 'research' && parts.length === 1) { html = researchPage(); title = 'Research'; }
@@ -192,7 +193,9 @@ function mountReview(project) {
     else if (parts[0] === 'blog' && parts.length === 2) { const a = articles.find(x => x.slug === parts[1]); html = a ? articlePage(a) : missing(); title = a ? a.title : 'Not found'; }
     else if (parts[0] === 'contact' && parts.length === 1) { html = contactPage(); title = 'Contact'; }
     else { html = missing(); title = 'Not found'; }
+    VisionWorkspace.leave();
     root.innerHTML = html;
+    if (parts[0] === "workspace" && VisionWorkspace.has(parts[1])) VisionWorkspace.mount(parts[1]);
     if (!parts.length) mountHomePreview();
     if (parts.length === 1 && parts[0] === "projects") updateGrid();
     if (parts[0] === "projects" && parts.length === 2) mountReview(projects.find(p => p.slug === parts[1]));

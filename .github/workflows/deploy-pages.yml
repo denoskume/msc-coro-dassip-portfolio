@@ -29,6 +29,7 @@ jobs:
         run: |
           mkdir -p _site
           cp index.html styles.css content.js app.js favicon.svg _site/
+          cp -R lab _site/lab
           node <<'NODE'
           const fs = require('node:fs');
           const path = require('node:path');
