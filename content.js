@@ -152,6 +152,10 @@ window.PORTFOLIO_DATA = {
         {
           "src": "https://raw.githubusercontent.com/denoskume/camera-calibration/main/outputs/figures/estimated_camera_poses.png",
           "caption": "Recovered camera-to-board geometry"
+        },
+        {
+          "src": "https://raw.githubusercontent.com/denoskume/camera-calibration/6cdf4031d37f2fc9c2f374a986f31856fe4bd005/outputs/figures/held_out_view_errors.png",
+          "caption": "Prediction error on held-out board poses. Both methods have their largest RMS error on img3.jpg."
         }
       ],
       "metrics": [
@@ -177,7 +181,7 @@ window.PORTFOLIO_DATA = {
         "Estimate normalized DLT homographies, recover intrinsics using Zhang constraints and reconstruct nine extrinsic poses.",
         "Compare projected and observed corners for each view; flag high-residual views for closer inspection."
       ],
-      "result": "All nine views were retained. Mean reprojection error was 0.434 pixels, with an overall RMS of 0.534 pixels.",
+      "result": "All nine views were retained. Mean reprojection error was 0.434 pixels, with an overall RMS of 0.534 pixels. In nine leave-one-view-out folds, 24 corners located each held-out board and 24 different corners tested the prediction. Pooled RMS on 216 test corners fell from 0.395 px for linear Zhang to 0.352 px for the nonlinear OpenCV model with distortion.",
       "limitations": "The pinhole model omits lens distortion. Production-grade dimensional inspection would need independent tolerance checks.",
       "codeTitle": "Python · Normalizing point coordinates",
       "code": "def compute_point_normalization_transform(points):\n    \"\"\"Compute point normalization transform.\"\"\"\n    points = np.asarray(points, dtype=float)\n\n    centroid = np.mean(points, axis=0)\n    shifted = points - centroid\n\n    distances = np.linalg.norm(shifted, axis=1)\n    mean_distance = np.mean(distances)\n    # Reject degenerate point sets before normalization to avoid unstable scaling.\n    if mean_distance < 1e-12:\n        raise ValueError(\n            \"Point normalization is undefined for coincident points.\"\n        )\n    scale = np.sqrt(2.0) / mean_distance\n\n    return np.array(\n        [\n            [scale, 0.0, -scale * centroid[0]],\n            [0.0, scale, -scale * centroid[1]],\n            [0.0, 0.0, 1.0],\n        ],\n        dtype=float,\n    )",
