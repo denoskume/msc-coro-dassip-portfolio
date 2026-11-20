@@ -33,25 +33,41 @@
     <div class="card-foot"><small>Technical field note</small><a href="${esc(href)}" class="circle-arrow" aria-label="Open article">↗</a></div></div></article>`;
   }
   function home() {
-    const chosen = projects.filter(p => p.featured);
-    return `<section class="hero"><div class="container hero-inner"><div class="hero-copy">${eyebrow('ENGINEERING PORTFOLIO / 2026')}
-      <h1>Computer vision.<br><em>Built on evidence.</em></h1>
-      <p class="lede">I’m Denos, a final-year MSc student at Centrale Nantes exploring image processing, computer vision and applied machine learning. Each case study reveals the problem, the method, real figures and inspectable code.</p>
-      <div class="hero-actions">${btn('#/projects', 'Explore projects', 'light')}${btn('#/research', 'Research interests', 'outline')}</div>
-      <div class="hero-foot"><div><div class="num">${projects.length}</div><span>Documented projects</span></div><div><div class="num">3</div><span>Focus areas</span></div><div><div class="num">${articles.length}</div><span>Technical notes</span></div></div>
-    </div><div class="hero-visual"><div class="visual-frame">${image(projects[0].cover, 'Medical instrument segmentation comparison')}</div><div class="visual-float"><small>FLUOROSCOPY / INTRA-SEQUENCE</small><strong>0.876 Dice</strong><small>Nine motion frames</small></div></div></div></section>
-    <div class="ticker"><div class="container ticker-inner"><span class="ticker-label">Working with</span><div class="ticker-items"><span>Python</span><span>OpenCV</span><span>PyTorch</span><span>NumPy</span><span>Jupyter</span><span>Image Processing</span><span>Model Evaluation</span></div></div></div>
-    <section class="section"><div class="container">${header('SELECTED WORK', 'Proof of work, not just claims.', 'Evidence from segmentation, camera geometry and multimodal representation learning.', '#/projects', 'All projects')}<div class="card-grid">${chosen.map(projectCard).join('')}</div></div></section>
-    <section class="section section-alt"><div class="container split-feature"><div class="feature-image">${image(projects[1].gallery[1].src, 'Reprojection error plot from camera calibration')}<span class="feature-sticker">GEOMETRY + VALIDATION</span></div>
-      <div class="feature-copy">${eyebrow('MY APPROACH')}<h2>Make the reasoning visible.</h2><p>A project should explain what was measured, how the result was obtained and where the method stops working.</p>
-      <ul class="check-list"><li><span class="check">✓</span><span><strong>Clear objectives</strong> and documented assumptions.</span></li><li><span class="check">✓</span><span><strong>Inspectable code</strong> with notebooks and meaningful code snapshots.</span></li><li><span class="check">✓</span><span><strong>Evidence and limitations</strong> presented together.</span></li></ul>
-      ${btn('#/projects/camera-calibration','Explore a case study')}</div></div></section>
-    <section class="section"><div class="container">${header('FIELD NOTES','Beyond the notebook.','Short articles on evaluation decisions, calibration and model behavior.','#/blog','All articles')}<div class="card-grid">${articles.slice(0, 3).map(articleCard).join('')}</div></div></section>
-    <section class="section" style="padding-top:0"><div class="container"><div class="cta-band"><div>${eyebrow("LET'S CONNECT")}<h2>Have a problem worth exploring?</h2><p>Open to technical discussions, project ideas and internships.</p></div>${btn('#/contact','Get in touch','light')}</div></div></section>`;
+    const calibration = projects.find(p => p.slug === 'camera-calibration');
+    return `<div class="container studio">
+      <header class="studio-intro"><div><p class="studio-byline">Denos Kume / Centrale Nantes</p><h1>Computer vision studio</h1><p>Explore my experiments in image processing and applied machine learning.</p></div>
+      <a class="btn btn-outline" href="#/contact">Contact Denos ↗</a></header>
+      <section class="instrument" aria-labelledby="instrument-title">
+        <div class="instrument-copy"><p class="instrument-kicker">Industrial inspection</p><h2 id="instrument-title">Camera <br>calibration</h2>
+        <p>Inspect the geometry of a camera across nine chessboard poses. Compare detected corners with their projected locations.</p>
+        <a class="instrument-link" href="#/projects/camera-calibration">Open case study ↗</a>
+        <dl><div><dt>Board views</dt><dd>9</dd></div><div><dt>Measured corners</dt><dd>432</dd></div><div><dt>Overall RMS</dt><dd>0.534 <small>px</small></dd></div></dl></div>
+        <div class="instrument-console"><div class="console-head"><strong>Corner inspector</strong><label><input id="preview-overlay" type="checkbox" checked> Overlay</label></div>
+        <div id="preview-board"></div><div class="console-controls"><label>View <select id="preview-view">${calibration.views.map((v,i)=>`<option value="${i}" ${i===7?'selected':''}>${esc(v.label)}</option>`).join('')}</select></label><output id="preview-result" aria-live="polite"></output></div></div>
+      </section>
+      <section class="studio-work"><div class="studio-heading"><h2>Featured projects</h2><a href="#/projects">All ${projects.length} projects →</a></div>
+      <div class="card-grid">${projects.filter(p=>p.featured).map(projectCard).join('')}</div></section>
+      <section class="studio-work"><div class="studio-heading"><h2>Engineering notes</h2><a href="#/blog">Read the blog →</a></div>
+      <div class="studio-notes">${articles.slice(0,3).map(a=>`<a href="#/blog/${esc(a.slug)}"><small>${esc(a.tag)}</small><strong>${esc(a.title)}</strong><span>${esc(a.minutes)} ↗</span></a>`).join('')}</div></section>
+    </div>`;
+  }
+
+  function mountHomePreview() {
+    const select = document.getElementById('preview-view');
+    const overlay = document.getElementById('preview-overlay');
+    const views = projects.find(p => p.slug === 'camera-calibration').views;
+    function renderBoard() {
+      const view = views[select.selectedIndex];
+      document.getElementById('preview-board').innerHTML = `<svg viewBox="0 0 640 480" role="img" aria-label="Chessboard pose ${esc(view.label)}"><image href="${esc(view.src)}" width="640" height="480"/>${overlay.checked ? view.marks : ''}</svg>`;
+      document.getElementById('preview-result').textContent = view.metrics.split(' · ').pop();
+    }
+    select.onchange = renderBoard;
+    overlay.onchange = renderBoard;
+    renderBoard();
   }
   function projectsPage() {
-    return `<div class="container page-intro">${crumbs([{label:'Home',href:'#/'},{label:'Projects'}])}${eyebrow('PROJECT LIBRARY')}<h1>Explore the work.</h1>
-    <p>One searchable home for experiments, visual outputs, methods, notebooks and code — no disconnected HTML pages required.</p></div>
+    return `<div class="container page-intro">${crumbs([{label:'Home',href:'#/'},{label:'Projects'}])}${eyebrow('PROJECT LIBRARY')}<h1>Project library</h1>
+    <p>Search experiments by method, technology or application.</p></div>
     <section class="container" style="padding-bottom:95px"><div class="filter-panel"><div class="filters" role="group" aria-label="Filter projects by topic">${filters.map(cat => `<button type="button" class="filter ${cat === state.category ? 'active' : ''}" data-filter="${esc(cat)}" aria-pressed="${cat === state.category}">${esc(cat)}</button>`).join('')}</div>
     <label class="search-wrap"><span class="visually-hidden" style="position:absolute;left:-9999px">Search projects</span><input id="project-search" type="search" placeholder="Search projects or technologies…" value="${esc(state.search)}" autocomplete="off"></label></div>
     <p id="project-count" class="count-line">${projects.length} projects</p><div id="project-grid" class="card-grid">${projects.map(projectCard).join('')}</div></section>`;
@@ -122,13 +138,13 @@ function mountReview(project) {
       <div class="detail-actions">${extBtn(p.github,'View source','primary')}${extBtn(p.notebook,'View notebook')}</div><p class="context">${esc(p.context)}</p></div>
       <div class="detail-hero-media">${image(p.cover,p.subtitle)}<p class="media-caption">Original project output · click the figures below to inspect</p></div></div></div></section>
     <div class="container"><div class="stats-grid">${stats}</div><div class="content-layout"><div class="project-main">
+    ${p.views ? `<section class="content-section workbench" id="review"><h2>${p.views[0].marks ? 'Inspect calibration corners' : 'Review instrument traces'}</h2><p>${p.views[0].marks ? 'Cyan circles show measured corners. Orange crosses show projected locations.' : 'Compare the tracing with the prediction. Green marks overlap, orange marks extra detections, and blue marks missed segments.'}</p><div class="view-tools"><button data-prev>Previous</button><label>View <select data-view>${p.views.map((v,i)=>'<option value="'+i+'">'+esc(v.label)+'</option>').join('')}</select></label><button data-next>Next</button>${p.views[0].marks ? '<label><input type="checkbox" checked data-overlay> Show corners</label>' : ''}</div><figure></figure><output aria-live="polite"></output><div class="review-fields"><label>Assessment<select data-status><option>Pending</option><option>Reviewed</option><option>Investigate</option></select></label><label>Observations<textarea rows="2"></textarea></label></div><button data-export>Export worksheet (CSV)</button> <span data-feedback role="status"></span></section>` : ''}
     <section class="content-section" id="challenge"><h2>The challenge</h2><p>${esc(p.challenge)}</p></section>
     <section class="content-section" id="approach"><h2>Method & workflow</h2><ol class="number-list">${p.approach.map(x => `<li>${esc(x)}</li>`).join('')}</ol></section>
     <section class="content-section" id="results"><h2>Results & interpretation</h2><p>${esc(p.result)}</p><div class="notice"><strong>Limitations.</strong> ${esc(p.limitations)}</div></section>
     <section class="content-section" id="figures"><h2>Visual evidence</h2><p>Figures are drawn from the actual project outputs. Select an image to inspect it at full size.</p><div class="figure-grid">${figures}</div></section>
     <section class="content-section" id="code"><h2>Code snapshot</h2><p>${p.excerpt ? 'From the executed project notebook.' : 'Illustrative Python excerpt. See the notebook for the full implementation.'}</p>
       <div class="code-box"><div class="code-top"><span class="code-dots" aria-hidden="true"><i></i><i></i><i></i></span><span>${esc(p.codeTitle)}</span><button type="button" data-copy-code="${esc(p.slug)}">Copy code</button></div><pre><code class="language-python">${esc(p.code)}</code></pre></div></section>
-    ${p.views ? `<section class="content-section workbench" id="review"><h2>${p.views[0].marks ? 'Inspect calibration corners' : 'Review instrument traces'}</h2><p>${p.views[0].marks ? 'Cyan circles show measured corners. Orange crosses show projected locations.' : 'Compare the tracing with the prediction. Green marks overlap, orange marks extra detections, and blue marks missed segments.'}</p><div class="view-tools"><button data-prev>Previous</button><label>View <select data-view>${p.views.map((v,i)=>'<option value="'+i+'">'+esc(v.label)+'</option>').join('')}</select></label><button data-next>Next</button>${p.views[0].marks ? '<label><input type="checkbox" checked data-overlay> Show corners</label>' : ''}</div><figure></figure><output aria-live="polite"></output><div class="review-fields"><label>Assessment<select data-status><option>Pending</option><option>Reviewed</option><option>Investigate</option></select></label><label>Observations<textarea rows="2"></textarea></label></div><button data-export>Export worksheet (CSV)</button> <span data-feedback role="status"></span></section>` : ''}
     <section class="content-section"><h2>Reproduce the work</h2><p>The repository contains the complete workflow, assumptions, implementation and generated figures.</p><div class="detail-actions">${extBtn(p.github,'Project repository','primary')}${extBtn(p.notebook,'Notebook')}</div></section>
     </div><aside class="sidebar" aria-label="Project page links"><div class="side-card"><h3>Contents</h3><nav class="side-nav">${anchors.map(([id,label]) => `<a href="#${esc(id)}" data-anchor="${esc(id)}">${esc(label)}</a>`).join('')}</nav></div>
       <div class="side-card"><h3>Explore source</h3>${extBtn(p.github,'GitHub repository')}${extBtn(p.notebook,'Executed notebook')}${p.demo ? extBtn(p.demo,'Original reviewer') : ''}</div>
@@ -136,7 +152,7 @@ function mountReview(project) {
     <section class="related-section"><div class="container">${header('KEEP EXPLORING','Related projects','More experiments in this area.','#/projects','Browse all')}<div class="card-grid">${recommendations.map(projectCard).join('')}</div></div></section>`;
   }
   function researchPage() {
-    return `<div class="container page-intro">${crumbs([{label:'Home',href:'#/'},{label:'Research'}])}${eyebrow('METHODS & QUESTIONS')}<h1>Curiosity with a method.</h1><p>Completed academic experiments and directions still under exploration. Research interests are not presented as peer-reviewed publications.</p></div>
+    return `<div class="container page-intro">${crumbs([{label:'Home',href:'#/'},{label:'Research'}])}${eyebrow('METHODS & QUESTIONS')}<h1>Research</h1><p>Completed academic experiments and directions still under exploration. Research interests are not presented as peer-reviewed publications.</p></div>
     <section class="container" style="padding:15px 0 65px"><div class="research-grid">${research.map((r,i) => `<article class="research-card"><div class="research-index">0${i+1}</div><span class="pill">${esc(r.stage)}</span><h3>${esc(r.title)}</h3><p>${esc(r.summary)}</p><p class="method">${esc(r.method)}</p>${r.link ? `<a class="text-link" style="margin-top:18px" href="#/projects/${esc(r.link)}">View case study <span aria-hidden="true">→</span></a>` : '<p style="margin-top:18px;font-size:.77rem">An area of inquiry, not a completed publication.</p>'}</article>`).join('')}</div></section>
     <section class="section section-alt"><div class="container split-feature"><div class="feature-image">${image(projects[2].gallery[0].src,'Audio and text classification pipeline')}</div><div class="feature-copy">${eyebrow('EVALUATION FIRST')}<h2>Measure. Question. Reproduce.</h2><p>The questions change, but the method stays consistent: define assumptions, inspect evidence and report limits.</p><ul class="check-list"><li><span class="check">✓</span>Reproducible scripts and figure outputs</li><li><span class="check">✓</span>Defined evaluation protocols</li><li><span class="check">✓</span>Transparent constraints and next questions</li></ul>${btn('#/projects','Inspect the evidence')}</div></div></section>`;
   }
@@ -149,8 +165,8 @@ function mountReview(project) {
     <section class="related-section"><div class="container">${header('READ NEXT','More field notes','Experimental decisions worth documenting.','#/blog','All articles')}<div class="card-grid">${articles.filter(x => x.slug !== a.slug).slice(0,3).map(articleCard).join('')}</div></div></section>`;
   }
   function contactPage() {
-    return `<div class="container page-intro">${crumbs([{label:'Home',href:'#/'},{label:'Contact'}])}${eyebrow('GET IN TOUCH')}<h1>Let's build useful things.</h1><p>For internship opportunities, engineering questions, project feedback and collaborations.</p></div>
-      <div class="container contact-grid"><div class="contact-copy"><h2>A conversation starts here.</h2><p>I explore image processing, computer vision and applied machine learning. Send a short message about the idea or opportunity you have in mind.</p><div class="contact-channel"><strong>Direct email</strong><a href="mailto:${esc(site.email)}">${esc(site.email)}</a></div><div class="contact-channel"><strong>Elsewhere</strong>${ext(site.linkedin,'LinkedIn')}<br>${ext(site.github,'GitHub')}</div></div>
+    return `<div class="container page-intro">${crumbs([{label:'Home',href:'#/'},{label:'Contact'}])}${eyebrow('GET IN TOUCH')}<h1>Contact</h1><p>For internship opportunities, engineering questions, project feedback and collaborations.</p></div>
+      <div class="container contact-grid"><div class="contact-copy"><h2>Get in touch</h2><p>I explore image processing, computer vision and applied machine learning. Send a short message about the idea or opportunity you have in mind.</p><div class="contact-channel"><strong>Direct email</strong><a href="mailto:${esc(site.email)}">${esc(site.email)}</a></div><div class="contact-channel"><strong>Elsewhere</strong>${ext(site.linkedin,'LinkedIn')}<br>${ext(site.github,'GitHub')}</div></div>
       <form class="contact-form" id="contact-form"><h3 style="font-size:1.45rem;margin-bottom:8px">Send a message</h3><p style="font-size:.84rem;margin-bottom:22px">This form uses a third-party email relay (FormSubmit). The recipient may need to activate it upon first use.</p>
       <div class="form-grid"><div class="field"><label for="sender-name">Your name *</label><input id="sender-name" name="name" maxlength="100" required autocomplete="name" placeholder="Your name"></div><div class="field"><label for="sender-email">Your email *</label><input id="sender-email" name="email" type="email" maxlength="180" required autocomplete="email" placeholder="name@example.com"></div></div>
       <div class="field"><label for="sender-subject">Subject *</label><input id="sender-subject" name="subject" required maxlength="150" placeholder="Project idea or opportunity"></div>
@@ -177,12 +193,42 @@ function mountReview(project) {
     else if (parts[0] === 'contact' && parts.length === 1) { html = contactPage(); title = 'Contact'; }
     else { html = missing(); title = 'Not found'; }
     root.innerHTML = html;
+    if (!parts.length) mountHomePreview();
+    if (parts.length === 1 && parts[0] === "projects") updateGrid();
     if (parts[0] === "projects" && parts.length === 2) mountReview(projects.find(p => p.slug === parts[1]));
     document.title = `${title} — Denos Kume`;
     document.querySelectorAll('[data-nav]').forEach(link => { const a = link.dataset.nav; const active = (!parts.length && a === 'home') || (parts.length > 0 && a === parts[0]); link.classList.toggle('active', !!active); if (active) link.setAttribute('aria-current','page'); else link.removeAttribute('aria-current'); });
     document.getElementById('primary-nav').classList.remove('open'); document.getElementById('menu-toggle').setAttribute('aria-expanded','false');
     closeLightbox(); window.scrollTo(0,0);
   }
+  const finder = document.getElementById('finder');
+  const query = document.getElementById('finder-query');
+  const matches = document.getElementById('finder-results');
+  const catalogue = [
+    ...projects.map(p => ({ title: p.title, terms: [p.subtitle, ...p.tags].join(' '), type: 'Project', url: '#/projects/' + p.slug })),
+    ...articles.map(a => ({ title: a.title, terms: a.tag, type: 'Article', url: '#/blog/' + a.slug }))
+  ];
+  function refreshFinder() {
+    const term = query.value.trim().toLowerCase();
+    const found = catalogue.filter(item => (item.title + ' ' + item.terms).toLowerCase().includes(term));
+    matches.innerHTML = found.map(item => `<a href="${esc(item.url)}"><span>${esc(item.title)}</span><small>${item.type}</small></a>`).join('') || '<p>No matching projects or articles.</p>';
+  }
+  function openFinder() {
+    query.value = '';
+    refreshFinder();
+    finder.showModal();
+    query.focus();
+  }
+  document.getElementById('studio-search').onclick = openFinder;
+  document.getElementById('finder-close').onclick = () => finder.close();
+  query.oninput = refreshFinder;
+  matches.onclick = event => { if (event.target.closest('a')) finder.close(); };
+  document.addEventListener('keydown', event => {
+    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'k') {
+      event.preventDefault();
+      if (finder.open) finder.close(); else openFinder();
+    }
+  });
   function toast(message) { const el = document.getElementById('toast'); el.textContent = message; el.classList.add('show'); clearTimeout(state.toastTimer); state.toastTimer = setTimeout(() => el.classList.remove('show'),2500); }
   function showLightbox(el) { const url = safeURL(el.dataset.lightbox); if (!url) return; const box = document.getElementById('lightbox'); const img = document.getElementById('lightbox-image'); img.src = url; img.alt = el.dataset.caption || 'Project figure'; document.getElementById('lightbox-caption').textContent = img.alt; box.classList.add('active'); box.setAttribute('aria-hidden','false'); document.body.style.overflow = 'hidden'; document.getElementById('lightbox-close').focus(); }
   function setTheme(value) { document.documentElement.dataset.theme = value; const b = document.getElementById('theme-toggle'); b.setAttribute('aria-label',value === 'dark' ? 'Switch to light theme' : 'Switch to dark theme'); b.innerHTML = value === 'dark' ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4 1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>' : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M20.9 13A9 9 0 0 1 11 3.1 9 9 0 1 0 20.9 13Z"/></svg>'; try { localStorage.setItem('dk-theme',value); } catch (_) {} }
@@ -219,3 +265,4 @@ function mountReview(project) {
   let theme = 'light'; try { theme = localStorage.getItem('dk-theme') || 'light'; } catch (_) {}
   setTheme(theme === 'dark' ? 'dark' : 'light'); document.getElementById('current-year').textContent = String(new Date().getFullYear()); draw();
 })();
+

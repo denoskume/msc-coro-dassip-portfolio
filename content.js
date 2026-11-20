@@ -25,7 +25,7 @@ window.PORTFOLIO_DATA = {
         "Medical imaging",
         "Evaluation"
       ],
-      "cover": "https://raw.githubusercontent.com/denoskume/Background-Subtraction-Fluoroscopy/main/assets/segmentation-comparison.png",
+      "cover": "computer-vision/portfolio-covers/fluoroscopy-instrument-segmentation.webp",
       "gallery": [
         {
           "src": "https://raw.githubusercontent.com/denoskume/Background-Subtraction-Fluoroscopy/main/assets/grayscale-comparison.png",
@@ -139,7 +139,7 @@ window.PORTFOLIO_DATA = {
         "Calibration",
         "OpenCV"
       ],
-      "cover": "https://raw.githubusercontent.com/denoskume/camera-calibration/main/outputs/figures/detected_chessboard_corners.png",
+      "cover": "computer-vision/portfolio-covers/camera-calibration.webp",
       "gallery": [
         {
           "src": "https://raw.githubusercontent.com/denoskume/camera-calibration/main/outputs/figures/detected_chessboard_corners.png",
@@ -257,7 +257,7 @@ window.PORTFOLIO_DATA = {
         "Zero-shot",
         "ESC-50"
       ],
-      "cover": "https://raw.githubusercontent.com/denoskume/CLAP-Zero-Shot-Audio-Classification/main/outputs/figures/clap_complete_zero_shot_pipeline.png",
+      "cover": "computer-vision/portfolio-covers/clap-zero-shot.webp",
       "gallery": [
         {
           "src": "https://raw.githubusercontent.com/denoskume/CLAP-Zero-Shot-Audio-Classification/main/outputs/figures/clap_complete_zero_shot_pipeline.png",

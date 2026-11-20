@@ -24,7 +24,7 @@
     <div class="container header-inner">
       <a class="brand" href="#/" aria-label="Denos Kume — home">
         <span class="brand-mark" aria-hidden="true">dk.</span>
-        <span>Denos Kume<span style="color:var(--accent)">.</span></span>
+        <span>Denos Kume<small class="brand-sub">Engineering portfolio</small></span>
       </a>
       <nav class="primary-nav" id="primary-nav" aria-label="Primary navigation">
         <a class="nav-link" href="#/" data-nav="home">Home</a>
@@ -33,6 +33,7 @@
         <a class="nav-link" href="#/blog" data-nav="blog">Blog</a>
         <a class="nav-link" href="#/contact" data-nav="contact">Contact</a>
       </nav>
+      <button type="button" class="studio-search" id="studio-search">Search portfolio <kbd>⌘ / Ctrl K</kbd></button>
       <div class="header-tools">
         <button class="icon-button" type="button" id="theme-toggle" aria-label="Switch color theme" title="Switch color theme">
           <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M20.9 13A9 9 0 0 1 11 3.1 9 9 0 1 0 20.9 13Z"/></svg>
@@ -51,6 +52,7 @@
       <p style="margin-top:25px"><a class="btn btn-primary" href="https://github.com/denoskume/msc-coro-dassip-portfolio">Explore source repository</a></p>
     </div>
   </main>
+  <dialog id="finder" aria-labelledby="finder-title"><div class="finder-head"><h2 id="finder-title">Search portfolio</h2><button type="button" id="finder-close" aria-label="Close search">×</button></div><input id="finder-query" type="search" placeholder="Search projects and articles" aria-label="Search projects and articles"><div id="finder-results"></div></dialog>
   <footer class="site-footer">
     <div class="container footer-grid">
       <div>
