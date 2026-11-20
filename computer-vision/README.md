@@ -14,7 +14,7 @@ Laboratory modules in **computer vision and deep learning**.
 
 | Module | Technical scope |
 | --- | --- |
-| [Camera Calibration](camera-calibration) | normalized DLT, Zhang calibration, SVD, intrinsic/extrinsic estimation, camera poses, reprojection error |
+| [Camera Calibration](https://github.com/denoskume/camera-calibration) | normalized DLT, Zhang calibration, SVD, intrinsic/extrinsic estimation, camera poses, reprojection error |
 | [Feature Detection & Tracking](feature-tracking) | ORB, binary descriptors, Hamming matching, BFMatcher, RANSAC, homography, fixed-reference object tracking |
 | [Deep Learning](deep-learning) | PyTorch MLP on MNIST, BatchNorm, ReLU, Cross-Entropy, Adam, hidden-size comparison, confidence analysis |
 
@@ -49,17 +49,6 @@ notebooks/
 ```text
 computer-vision/
 ├── README.md
-├── camera-calibration/
-│   ├── README.md
-│   ├── data/
-│   ├── notebooks/
-│   │   ├── problem_statement.ipynb
-│   │   ├── theory.ipynb
-│   │   ├── requirements.ipynb
-│   │   └── main.ipynb
-│   ├── outputs/
-│   │   └── figures/
-│   └── requirements.txt
 ├── deep-learning/
 │   ├── README.md
 │   ├── data/

@@ -27,7 +27,7 @@ Beyond the code, the notebooks document the experimental reasoning: how methods 
 
 ### Computer Vision
 
-- [Camera Calibration](computer-vision/camera-calibration/)
+- [Camera Calibration](https://github.com/denoskume/camera-calibration)
 - [Feature Detection and Tracking](computer-vision/feature-tracking/)
 - [Deep Learning](computer-vision/deep-learning/)
 
@@ -48,7 +48,6 @@ Beyond the code, the notebooks document the experimental reasoning: how methods 
 msc-coro-dassip-portfolio/
 ├── computer-vision/
 │   ├── README.md
-│   ├── camera-calibration/
 │   ├── deep-learning/
 │   └── feature-tracking/
 ├── image-processing/
