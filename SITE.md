@@ -25,7 +25,7 @@ Open `http://localhost:8000/` and explore the navigation. Use a local server ins
 
 ## Publish to GitHub Pages
 
-With repository administration access, open **Settings → Pages → Build and deployment → Deploy from a branch**; choose `main` and `/(root)` and save. Pages then serves the site from the repository root. GitHub may require a short initial deployment period. If Pages is not enabled, the public GitHub repository still contains all source files but the site URL will not yet be live.
+An included GitHub Actions workflow (`.github/workflows/deploy-pages.yml`) builds a small static release from the root HTML/CSS/JS and the project figures actually used on the website, then deploys it on every push to `main`. The workflow attempts to enable Pages during configuration. **If the Pages site is not active**, use the repository's **Settings → Pages → Build and deployment** to select **GitHub Actions** as the source (repository owner action may be required). The public site URL is only ready once the deployment succeeds. Until then, all source code is available in the repository.
 
 ## Content and project references
 

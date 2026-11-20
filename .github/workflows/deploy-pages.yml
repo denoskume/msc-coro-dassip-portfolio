@@ -1,0 +1,71 @@
+name: Deploy portfolio to GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Build lightweight static site
+        shell: bash
+        run: |
+          mkdir -p _site
+          cp index.html styles.css content.js app.js favicon.svg _site/
+          node <<'NODE'
+          const fs = require('node:fs');
+          const path = require('node:path');
+          const vm = require('node:vm');
+          const context = {window: {}};
+          vm.runInNewContext(fs.readFileSync('content.js', 'utf8'), context);
+          const data = context.window.PORTFOLIO_DATA;
+          const images = [
+            ...data.projects.flatMap(p => [p.cover, ...p.gallery.map(f => f.src)]),
+            ...data.articles.map(a => a.cover)
+          ];
+          let copied = 0;
+          for (const value of new Set(images)) {
+            if (typeof value !== 'string' || /^https?:\/\//i.test(value)) continue;
+            const filename = path.posix.normalize(value);
+            if (!/^(computer-vision|image-processing)\//.test(filename) || filename.includes('..')) {
+              throw new Error('Unsafe image path: ' + value);
+            }
+            if (!fs.existsSync(filename)) throw new Error('Missing project figure: ' + filename);
+            const target = path.join('_site', filename);
+            fs.mkdirSync(path.dirname(target), {recursive: true});
+            fs.copyFileSync(filename, target);
+            copied++;
+          }
+          console.log('Copied ' + copied + ' local evidence figures');
+          NODE
+
+      - name: Configure GitHub Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+
+      - name: Deploy site
+        id: deployment
+        uses: actions/deploy-pages@v4
