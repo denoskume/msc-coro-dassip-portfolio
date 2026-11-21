@@ -34,8 +34,14 @@
   }
   function home() {
     const featured = projects.filter(project => project.featured);
-    return `<section class="featured-carousel" aria-label="Featured projects" aria-roledescription="carousel">
-      <h1 class="opt-sr">Computer vision studio</h1>
+    return `<header class="home container">
+      <div class="hero-grid"><div class="hero-kicker"><span class="kicker">Denos Kume · Nantes</span></div>
+      <h1 class="hero-title">Computer vision<br>and the <span class="italic">geometry</span><span class="indent">of images.</span></h1>
+      <aside class="hero-aside"><strong>Engineering practice</strong>I study how cameras measure space and how algorithms trace fine structures in noisy images. <a href="#/about">About me →</a></aside></div>
+      <div class="hero-meta">${[[projects.length,'Projects'],[articles.length,'Field notes'],['09','Calibration views'],['10','Fluoroscopy frames']].map(([value,label]) => `<div><span class="num">${String(value).padStart(2,'0')}</span><span class="lbl">${label}</span></div>`).join('')}</div>
+      </header><div class="marquee-label"><span class="t">Selected work</span><a href="#/projects">Project index →</a></div>
+      <section class="featured-carousel" aria-label="Featured projects" aria-roledescription="carousel">
+      
       <div class="featured-stage">${featured.map((project, i) => `<article class="featured-slide" ${i ? 'hidden inert' : ''}>
         <img class="featured-art" src="${esc(project.cover)}" alt="${esc(project.subtitle)}" decoding="async">
         <div class="featured-caption"><div><small>${esc(project.category)}</small><h2><a href="#/projects/${esc(project.slug)}">${esc(project.title)} ↗</a></h2></div></div>
@@ -109,6 +115,16 @@
       stopFeaturedCarousel = () => {};
     };
   }
+  function aboutPage() {
+    return `<section class="about container"><div class="about-grid">
+      <figure class="about-portrait"><div class="frame"><img src="lab/samples/img7.jpg" alt="Chessboard target used in the camera calibration study"></div><figcaption class="cap">From the calibration study</figcaption></figure>
+      <div class="about-text"><span class="kicker">About Denos</span><h1>From electronics to <em>computer vision.</em></h1><div class="body"><p>I am a final-year Control and Robotics student at Centrale Nantes, specializing in data science, signal and image processing. My work connects the physics of image capture with the algorithms that interpret each frame.</p><p>In my projects, I compare predictions with manual tracings, inspect reprojection errors across camera poses and document the experiments in runnable notebooks.</p></div><a class="text-link" href="#/projects">Explore my projects →</a></div></div>
+      <div class="timeline-head"><h2>Education and experience</h2></div>
+      <div class="chrono-row"><span>2025–2027</span><strong>Centrale Nantes</strong><span>MSc in Control and Robotics · Nantes, France</span></div>
+      <div class="chrono-row"><span>2024</span><strong>Unified Mentor</strong><span>Data analyst internship · Bengaluru, India</span></div>
+      <div class="chrono-row"><span>2021–2025</span><strong>Kristu Jayanti University</strong><span>BSc in Computer Science and Electronics · Bengaluru, India</span></div></section>`;
+  }
+
   function projectsPage() {
     return `<div class="container page-intro">${crumbs([{label:'Home',href:'#/'},{label:'Projects'}])}${eyebrow('PROJECT LIBRARY')}<h1>Project library</h1>
     <p>Search experiments by method, technology or application.</p></div>
@@ -267,6 +283,7 @@ function mountReview(project) {
     try { parts = decodeURIComponent(raw).split('?')[0].split('/').filter(Boolean); } catch { parts = []; }
     let html, title = 'Computer Vision & Applied AI';
     if (!parts.length) html = home();
+    else if (parts.length === 1 && parts[0] === 'about') { html = aboutPage(); title = 'About'; }
     else if (parts[0] === "workspace" && parts.length === 2 && VisionWorkspace.has(parts[1])) { html = VisionWorkspace.page(parts[1]); title = "Vision workspace"; }
     else if (parts[0] === 'projects' && parts.length === 1) { html = projectsPage(); title = 'Projects'; }
     else if (parts[0] === 'projects' && parts.length === 2) { const p = projects.find(x => x.slug === parts[1]); html = p ? detailPage(p) : missing(); title = p ? p.subtitle : 'Not found'; }
