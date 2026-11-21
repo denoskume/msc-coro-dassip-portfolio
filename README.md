@@ -1,8 +1,6 @@
-# Portfolio website
+# MSc CORO DASSIP — Experimental Laboratory Repository
 
-[Open the interactive portfolio](https://raw.githack.com/denoskume/msc-coro-dassip-portfolio/main/index.html) · [Browse projects](https://raw.githack.com/denoskume/msc-coro-dassip-portfolio/main/index.html#/projects) It includes **Home, Projects, Research, Blog, and Contact**, with dedicated in-site project pages, code previews, results, figure galleries and in-page technical reviews. The original laboratory files and notebooks are preserved below.
-
-**Run locally:** `python -m http.server 8000` from the repository root, then open `http://localhost:8000/`. See [SITE.md](SITE.md) for setup, content editing, contact form, deployment and accessibility notes.
+This repository preserves the original **notebooks, datasets, experimental figures and reproducible exercises** in image processing, computer vision and deep learning. Website presentation and interactive case-study pages are maintained separately in the standalone portfolio repository.
 
 ---
 
@@ -12,7 +10,7 @@
 <p align="right"><strong>MSc. CORO DASSIP</strong></p>
 <br clear="both">
 
-<h1 align="center">MSc CORO DASSIP — Portfolio</h1>
+<h1 align="center">MSc CORO DASSIP — Laboratory Work</h1>
 
 This repository brings together laboratory modules in **Computer Vision, Image Processing, and Deep Learning**.
 
